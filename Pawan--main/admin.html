@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel - Saanjh Orders</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #F5E6D3 0%, #E8D4C0 100%);
+      min-height: 100vh;
+      padding: 2rem;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    header {
+      background: rgba(255, 255, 255, 0.95);
+      padding: 2rem;
+      border-radius: 16px;
+      box-shadow: 0 8px 32px rgba(92, 77, 66, 0.1);
+      margin-bottom: 2rem;
+    }
+
+    h1 {
+      color: #5C4D42;
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .stat-card {
+      background: linear-gradient(135deg, #D4A574 0%, #A68566 100%);
+      color: white;
+      padding: 1.5rem;
+      border-radius: 12px;
+      text-align: center;
+    }
+
+    .stat-number {
+      font-size: 2rem;
+      font-weight: 700;
+      display: block;
+    }
+
+    .stat-label {
+      font-size: 0.9rem;
+      opacity: 0.9;
+    }
+
+    .controls {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+
+    button {
+      padding: 0.8rem 1.5rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      font-size: 0.95rem;
+    }
+
+    .btn-refresh {
+      background: linear-gradient(135deg, #D4A574 0%, #A68566 100%);
+      color: white;
+    }
+
+    .btn-refresh:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(212, 165, 116, 0.3);
+    }
+
+    .btn-danger {
+      background: #c85050;
+      color: white;
+    }
+
+    .btn-danger:hover {
+      background: #a84040;
+    }
+
+    .orders-table {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 16px;
+      box-shadow: 0 8px 32px rgba(92, 77, 66, 0.1);
+      overflow: hidden;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    thead {
+      background: #F5E6D3;
+      border-bottom: 2px solid #E8D4C0;
+    }
+
+    th {
+      padding: 1.2rem;
+      text-align: left;
+      font-weight: 600;
+      color: #5C4D42;
+      text-transform: uppercase;
+      font-size: 0.85rem;
+      letter-spacing: 0.05em;
+    }
+
+    td {
+      padding: 1.2rem;
+      border-bottom: 1px solid #F0EBE5;
+      color: #5C4D42;
+    }
+
+    tbody tr:hover {
+      background: #FAF8F5;
+    }
+
+    .order-id {
+      font-weight: 600;
+      color: #D4A574;
+    }
+
+    .status {
+      padding: 0.4rem 0.8rem;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-align: center;
+      display: inline-block;
+    }
+
+    .status-pending {
+      background: #fff3cd;
+      color: #856404;
+    }
+
+    .status-completed {
+      background: #d4edda;
+      color: #155724;
+    }
+
+    .status-cancelled {
+      background: #f8d7da;
+      color: #721c24;
+    }
+
+    .actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .btn-small {
+      padding: 0.5rem 1rem;
+      font-size: 0.8rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .btn-view {
+      background: #D4A574;
+      color: white;
+    }
+
+    .btn-view:hover {
+      background: #A68566;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+    }
+
+    .modal.show {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-content {
+      background: white;
+      padding: 2rem;
+      border-radius: 16px;
+      max-width: 600px;
+      width: 90%;
+      max-height: 80vh;
+      overflow-y: auto;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    }
+
+    .modal-header {
+      margin-bottom: 1.5rem;
+      border-bottom: 2px solid #F0EBE5;
+      padding-bottom: 1rem;
+    }
+
+    .modal-header h2 {
+      color: #5C4D42;
+      margin: 0;
+    }
+
+    .close {
+      float: right;
+      font-size: 2rem;
+      cursor: pointer;
+      color: #5C4D42;
+      transition: color 0.3s;
+    }
+
+    .close:hover {
+      color: #D4A574;
+    }
+
+    .order-detail {
+      margin-bottom: 1.5rem;
+    }
+
+    .order-detail label {
+      display: block;
+      font-weight: 600;
+      color: #D4A574;
+      margin-bottom: 0.5rem;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+    }
+
+    .order-detail p {
+      color: #5C4D42;
+      margin: 0;
+      padding: 0.5rem 0;
+    }
+
+    .items-list {
+      background: #FAF8F5;
+      padding: 1rem;
+      border-radius: 8px;
+      margin-top: 0.5rem;
+    }
+
+    .items-list li {
+      color: #5C4D42;
+      margin-bottom: 0.5rem;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 1rem;
+      margin-top: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 3rem 2rem;
+      color: #8B7B70;
+    }
+
+    .empty-state svg {
+      width: 80px;
+      height: 80px;
+      margin-bottom: 1rem;
+      opacity: 0.3;
+    }
+
+    @media (max-width: 768px) {
+      table {
+        font-size: 0.9rem;
+      }
+
+      th, td {
+        padding: 0.8rem;
+      }
+
+      .controls {
+        flex-direction: column;
+      }
+
+      button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>📊 Saanjh Vibe - Order Management</h1>
+      <div class="stats">
+        <div class="stat-card">
+          <span class="stat-number" id="totalOrders">0</span>
+          <span class="stat-label">Total Orders</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-number" id="pendingOrders">0</span>
+          <span class="stat-label">Pending</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-number" id="completedOrders">0</span>
+          <span class="stat-label">Completed</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-number" id="totalRevenue">₹0</span>
+          <span class="stat-label">Total Revenue</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="controls">
+      <button class="btn-refresh" onclick="loadOrders()">🔄 Refresh Orders</button>
+    </div>
+
+    <div class="orders-table">
+      <table>
+        <thead>
+          <tr>
+            <th>Order ID</th>
+            <th>Customer</th>
+            <th>Phone</th>
+            <th>Amount</th>
+            <th>Status</th>
+            <th>Date</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="ordersBody">
+          <tr>
+            <td colspan="7" style="text-align: center; padding: 2rem; color: #8B7B70;">
+              Loading orders...
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Order Detail Modal -->
+  <div id="orderModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <h2>Order Details</h2>
+      </div>
+      <div id="modalBody"></div>
+      <div class="modal-actions">
+        <button class="btn-small btn-view" onclick="markAsCompleted()">✓ Mark Completed</button>
+        <button class="btn-small btn-danger" onclick="deleteOrder()">🗑 Delete Order</button>
+        <button class="btn-small btn-view" onclick="closeModal()">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let currentOrderId = null;
+
+    // Load orders from backend
+    async function loadOrders() {
+      try {
+        const response = await fetch('http://localhost:3000/api/orders');
+        const orders = await response.json();
+
+        if (orders.length === 0) {
+          document.getElementById('ordersBody').innerHTML = `
+            <tr>
+              <td colspan="7" style="text-align: center; padding: 2rem;">
+                <div class="empty-state">
+                  <p>No orders yet. Orders will appear here once customers place them.</p>
+                </div>
+              </td>
+            </tr>
+          `;
+          updateStats(orders);
+          return;
+        }
+
+        const html = orders.map(order => `
+          <tr>
+            <td class="order-id">#${order.id}</td>
+            <td>${order.customer_name}</td>
+            <td>${order.customer_phone}</td>
+            <td>₹${parseFloat(order.total_amount).toFixed(2)}</td>
+            <td>
+              <span class="status status-${order.status}">
+                ${order.status.charAt(0).toUpperCase() + order.status.slice(1)}
+              </span>
+            </td>
+            <td>${new Date(order.created_at).toLocaleDateString('en-IN')}</td>
+            <td>
+              <div class="actions">
+                <button class="btn-small btn-view" onclick="viewOrder(${order.id})">View</button>
+              </div>
+            </td>
+          </tr>
+        `).join('');
+
+        document.getElementById('ordersBody').innerHTML = html;
+        updateStats(orders);
+      } catch (error) {
+        console.error('Error loading orders:', error);
+        document.getElementById('ordersBody').innerHTML = `
+          <tr>
+            <td colspan="7" style="text-align: center; padding: 2rem; color: #c85050;">
+              Error loading orders. Make sure the server is running on http://localhost:3000
+            </td>
+          </tr>
+        `;
+      }
+    }
+
+    // Update statistics
+    function updateStats(orders) {
+      const total = orders.length;
+      const pending = orders.filter(o => o.status === 'pending').length;
+      const completed = orders.filter(o => o.status === 'completed').length;
+      const revenue = orders.reduce((sum, o) => sum + parseFloat(o.total_amount), 0);
+
+      document.getElementById('totalOrders').textContent = total;
+      document.getElementById('pendingOrders').textContent = pending;
+      document.getElementById('completedOrders').textContent = completed;
+      document.getElementById('totalRevenue').textContent = '₹' + revenue.toFixed(2);
+    }
+
+    // View order details
+    async function viewOrder(orderId) {
+      try {
+        const response = await fetch(`http://localhost:3000/api/orders/${orderId}`);
+        const order = await response.json();
+        currentOrderId = orderId;
+
+        const items = JSON.parse(order.items);
+        const itemsHtml = items.map(item => 
+          `<li>${item.name} × ${item.quantity} = ₹${(item.price * item.quantity).toFixed(2)}</li>`
+        ).join('');
+
+        const modalBody = document.getElementById('modalBody');
+        modalBody.innerHTML = `
+          <div class="order-detail">
+            <label>Order ID</label>
+            <p>#${order.id}</p>
+          </div>
+          <div class="order-detail">
+            <label>Customer Name</label>
+            <p>${order.customer_name}</p>
+          </div>
+          <div class="order-detail">
+            <label>Email</label>
+            <p>${order.customer_email || 'N/A'}</p>
+          </div>
+          <div class="order-detail">
+            <label>Phone</label>
+            <p>${order.customer_phone}</p>
+          </div>
+          <div class="order-detail">
+            <label>Delivery Address</label>
+            <p>${order.customer_address || 'Not provided'}</p>
+          </div>
+          <div class="order-detail">
+            <label>Items Ordered</label>
+            <ul class="items-list">${itemsHtml}</ul>
+          </div>
+          <div class="order-detail">
+            <label>Total Amount</label>
+            <p style="font-size: 1.3rem; color: #D4A574; font-weight: 700;">₹${parseFloat(order.total_amount).toFixed(2)}</p>
+          </div>
+          <div class="order-detail">
+            <label>Status</label>
+            <p>
+              <span class="status status-${order.status}">
+                ${order.status.charAt(0).toUpperCase() + order.status.slice(1)}
+              </span>
+            </p>
+          </div>
+          <div class="order-detail">
+            <label>Order Date</label>
+            <p>${new Date(order.created_at).toLocaleString('en-IN')}</p>
+          </div>
+          ${order.notes ? `
+            <div class="order-detail">
+              <label>Notes</label>
+              <p>${order.notes}</p>
+            </div>
+          ` : ''}
+        `;
+
+        document.getElementById('orderModal').classList.add('show');
+      } catch (error) {
+        console.error('Error viewing order:', error);
+        alert('Error loading order details');
+      }
+    }
+
+    // Mark order as completed
+    async function markAsCompleted() {
+      if (!currentOrderId) return;
+
+      try {
+        const response = await fetch(`http://localhost:3000/api/orders/${currentOrderId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ status: 'completed', notes: 'Order completed' })
+        });
+
+        if (response.ok) {
+          alert('Order marked as completed!');
+          closeModal();
+          loadOrders();
+        }
+      } catch (error) {
+        console.error('Error updating order:', error);
+        alert('Error updating order');
+      }
+    }
+
+    // Delete order
+    async function deleteOrder() {
+      if (!currentOrderId || !confirm('Are you sure you want to delete this order?')) return;
+
+      try {
+        const response = await fetch(`http://localhost:3000/api/orders/${currentOrderId}`, {
+          method: 'DELETE'
+        });
+
+        if (response.ok) {
+          alert('Order deleted!');
+          closeModal();
+          loadOrders();
+        }
+      } catch (error) {
+        console.error('Error deleting order:', error);
+        alert('Error deleting order');
+      }
+    }
+
+    // Close modal
+    function closeModal() {
+      document.getElementById('orderModal').classList.remove('show');
+      currentOrderId = null;
+    }
+
+    // Close modal when clicking outside
+    window.onclick = function(event) {
+      const modal = document.getElementById('orderModal');
+      if (event.target == modal) {
+        modal.classList.remove('show');
+      }
+    };
+
+    // Auto-load orders on page load
+    loadOrders();
+    // Refresh every 30 seconds
+    setInterval(loadOrders, 30000);
+  </script>
+</body>
+</html>

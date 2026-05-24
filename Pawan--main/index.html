@@ -1,0 +1,1170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Saanjh | Candles & Jewellery</title>
+  <meta name="description" content="Saanjh — handcrafted luxury candles and elegant jewellery. Light that warms the soul. Shop signature scents and mindful living pieces online." />
+  <meta property="og:title" content="Saanjh | Candles & Jewellery" />
+  <meta property="og:description" content="Handcrafted luxury candles and elegant jewellery for mindful living." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="other image/saanjhlogo.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="icon" href="other image/saanjhlogo.png" type="image/png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    /* SPA-only overrides (original look from style.css) */
+    .site-nav a.active { color: var(--gold); }
+    .cart-btn {
+      position: relative; background: transparent; font-size: 1.25rem; padding: 0.25rem; cursor: pointer;
+    }
+    .cart-count {
+      position: absolute; top: -4px; right: -6px;
+      background: var(--gold); color: #fff;
+      font-size: 0.65rem; font-weight: 600;
+      width: 18px; height: 18px; border-radius: 50%;
+      display: grid; place-items: center;
+    }
+
+    :root { --transition: 0.35s cubic-bezier(0.4, 0, 0.2, 1); }
+
+    /* Pages */
+    .page {
+      display: none;
+      opacity: 0;
+      transform: translateY(12px);
+      transition: opacity var(--transition), transform var(--transition);
+      padding-bottom: 0;
+    }
+    .page .section { padding-bottom: 5rem; }
+    .product-card { cursor: pointer; }
+    .page.active {
+      display: block;
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Product detail */
+    .breadcrumb {
+      padding: 1rem 0; font-size: 0.85rem; color: var(--muted);
+    }
+    .breadcrumb a { color: var(--gold-dark); }
+    .breadcrumb span { margin: 0 0.4rem; }
+    .detail-layout {
+      display: grid; grid-template-columns: 1.2fr 1fr; gap: 3rem;
+      padding: 1rem 0 3rem; align-items: start;
+    }
+    .detail-image-wrap {
+      border-radius: var(--radius); overflow: hidden;
+      box-shadow: var(--shadow); background: var(--white);
+    }
+    .detail-image-wrap img { width: 100%; aspect-ratio: 1; object-fit: cover; }
+    .detail-info h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.75rem, 4vw, 2.25rem); margin-bottom: 0.5rem;
+    }
+    .rating { color: var(--gold); font-size: 1rem; margin-bottom: 1rem; }
+    .rating span { color: var(--muted); font-size: 0.9rem; }
+    .detail-price { font-size: 1.75rem; font-weight: 600; color: var(--gold-dark); margin-bottom: 1rem; }
+    .button-buy {
+      display: inline-flex; align-items: center; justify-content: center;
+      padding: 1rem 2.2rem; border-radius: 50px; font-weight: 600; font-size: 0.95rem;
+      background: var(--text-dark); color: #fff; border: none; cursor: pointer;
+      transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .button-buy:hover { transform: translateY(-3px); box-shadow: 0 20px 50px rgba(92, 77, 66, 0.2); }
+    .detail-desc { color: var(--muted); margin-bottom: 1.5rem; }
+    .qty-row {
+      display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;
+    }
+    .qty-label { font-weight: 500; font-size: 0.9rem; }
+    .qty-control {
+      display: flex; align-items: center; border: 1px solid rgba(176, 125, 58, 0.35);
+      border-radius: 8px; overflow: hidden;
+    }
+    .qty-control button {
+      width: 40px; height: 40px; background: var(--cream);
+      font-size: 1.2rem; color: var(--text-dark);
+    }
+    .qty-control button:hover { background: var(--gold); color: #fff; }
+    .qty-control input {
+      width: 50px; text-align: center; border: none; background: #fff;
+      font-size: 1rem; font-weight: 500;
+    }
+    .detail-actions { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 2rem; }
+    .detail-specs {
+      background: rgba(255, 255, 255, 0.9); border-radius: var(--radius-lg);
+      padding: 1.5rem; margin-bottom: 2rem;
+    }
+    .detail-specs h3 {
+      font-family: 'Playfair Display', serif; font-size: 1.1rem; margin-bottom: 1rem;
+    }
+    .detail-specs dl { display: grid; gap: 0.5rem; font-size: 0.9rem; }
+    .detail-specs dt { font-weight: 600; display: inline; }
+    .detail-specs dt::after { content: ': '; }
+    .detail-specs dd { display: inline; color: var(--muted); margin: 0; }
+    .detail-specs .spec-row { display: block; margin-bottom: 0.35rem; }
+    .related-section { padding: 2rem 0 3rem; border-top: 1px solid rgba(212, 165, 116, 0.25); }
+    .related-section h2 {
+      font-family: 'Playfair Display', serif; font-size: 1.5rem; margin-bottom: 1.5rem;
+    }
+    .related-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.25rem;
+    }
+    .related-card {
+      background: var(--white); border-radius: 12px; overflow: hidden;
+      cursor: pointer; box-shadow: var(--shadow); transition: transform 0.2s;
+    }
+    .related-card:hover { transform: translateY(-3px); }
+    .related-card img { height: 140px; width: 100%; object-fit: cover; }
+    .related-card p { padding: 0.75rem; font-size: 0.85rem; font-weight: 500; }
+
+    /* Cart drawer */
+    .cart-overlay {
+      position: fixed; inset: 0; background: rgba(44, 26, 14, 0.4);
+      z-index: 300; opacity: 0; visibility: hidden; transition: var(--transition);
+    }
+    .cart-overlay.open { opacity: 1; visibility: visible; }
+    .cart-drawer {
+      position: fixed; top: 0; right: 0; width: min(400px, 100%);
+      height: 100%; background: #fff; z-index: 301;
+      transform: translateX(100%); transition: transform var(--transition);
+      display: flex; flex-direction: column; box-shadow: -8px 0 40px rgba(0,0,0,0.15);
+    }
+    .cart-drawer.open { transform: translateX(0); }
+    .cart-header {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--beige);
+    }
+    .cart-header h2 { font-family: 'Playfair Display', serif; font-size: 1.35rem; }
+    .cart-close { background: none; font-size: 1.5rem; line-height: 1; }
+    .cart-items { flex: 1; overflow-y: auto; padding: 1rem 1.5rem; }
+    .cart-item {
+      display: flex; gap: 1rem; padding: 1.2rem 0;
+      border-bottom: 1px solid var(--beige);
+      align-items: center;
+    }
+    .cart-item img { width: 64px; height: 64px; object-fit: cover; border-radius: 8px; flex-shrink: 0; }
+    .cart-item-info { flex: 1; min-width: 0; }
+    .cart-item-header {
+      display: flex; justify-content: space-between; align-items: flex-start;
+      gap: 0.5rem;
+    }
+    .cart-item-header h4 { font-size: 0.9rem; margin: 0; font-weight: 600; color: var(--text-dark); }
+    .cart-item-remove {
+      background: none; border: none; padding: 0; cursor: pointer;
+      font-size: 1.25rem; line-height: 1; color: var(--text-muted);
+      transition: color 0.25s;
+    }
+    .cart-item-remove:hover { color: #d9534f; }
+    .cart-item-price { font-size: 0.8rem; color: var(--text-muted); margin: 0.15rem 0 0.5rem; }
+    .cart-item-controls {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 1rem; margin-top: 0.5rem;
+    }
+    .cart-qty-control {
+      display: flex; align-items: center; border: 1px solid rgba(212, 165, 116, 0.25);
+      border-radius: 6px; overflow: hidden; background: #fff;
+    }
+    .cart-qty-btn {
+      width: 26px; height: 26px; border: none; background: transparent;
+      cursor: pointer; font-size: 0.9rem; font-weight: 600; color: var(--text-dark);
+      display: grid; place-items: center; transition: background 0.2s;
+      padding: 0;
+    }
+    .cart-qty-btn:hover { background: var(--beige); }
+    .cart-qty-val {
+      font-size: 0.85rem; font-weight: 600; min-width: 22px; text-align: center;
+      color: var(--text-dark);
+    }
+    .cart-item-subtotal { font-size: 0.85rem; font-weight: 600; color: var(--gold-dark); }
+    .cart-footer { padding: 1.25rem 1.5rem; border-top: 1px solid var(--beige); }
+
+    .cart-total { font-size: 1.15rem; font-weight: 600; margin-bottom: 1rem; }
+    .cart-empty { color: var(--muted); text-align: center; padding: 2rem; }
+
+    /* Toast */
+    .toast {
+      position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%) translateY(80px);
+      background: var(--text-dark); color: #fff; padding: 0.85rem 1.5rem;
+      border-radius: 50px; z-index: 400; opacity: 0; transition: var(--transition);
+      font-size: 0.9rem; box-shadow: var(--shadow-soft);
+    }
+    #page-product .container { width: min(1200px, calc(100% - 3rem)); margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    @media (max-width: 900px) {
+      .detail-layout { grid-template-columns: 1fr; }
+      .related-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 640px) {
+      .related-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    .bestseller-grid {
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.25rem;
+    }
+    .bestseller-grid .product-image { height: 200px; }
+    .bestseller-grid .product-copy { padding: 1.25rem; }
+    .bestseller-grid .product-copy p {
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    @media (max-width: 1024px) {
+      .bestseller-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 640px) {
+      .bestseller-grid { grid-template-columns: 1fr; }
+    }
+
+    .detail-thumbs {
+      display: flex; gap: 0.5rem; margin-top: 0.75rem; flex-wrap: wrap;
+    }
+    .detail-thumb {
+      padding: 0; border: 2px solid transparent; border-radius: 8px;
+      overflow: hidden; cursor: pointer; background: none; width: 64px; height: 64px;
+    }
+    .detail-thumb.active { border-color: var(--gold); }
+    .detail-thumb img { width: 100%; height: 100%; object-fit: cover; }
+
+    .faq-list { max-width: 720px; margin: 0 auto; }
+    .faq-list details {
+      background: rgba(255, 255, 255, 0.85); border-radius: 12px;
+      margin-bottom: 0.75rem; padding: 1rem 1.25rem;
+      border: 1px solid rgba(212, 165, 116, 0.2);
+    }
+    .faq-list summary {
+      font-weight: 600; cursor: pointer; color: var(--text-dark);
+      font-family: 'Playfair Display', serif;
+    }
+    .faq-list p { margin: 0.75rem 0 0; color: var(--text-muted); font-size: 0.95rem; line-height: 1.7; }
+
+    .shop-mini-footer {
+      display: flex; flex-wrap: wrap; align-items: center; justify-content: center;
+      gap: 0.75rem 1.25rem; padding: 1.25rem 1.5rem; margin-top: 1rem;
+      background: rgba(250, 248, 245, 0.95);
+      border-top: 1px solid rgba(212, 165, 116, 0.2);
+      font-size: 0.9rem;
+    }
+    .shop-mini-footer a { color: var(--text-dark); font-weight: 500; }
+    .shop-mini-footer a:hover { color: var(--gold); }
+    .shop-mini-footer .sep { color: var(--text-muted); opacity: 0.5; }
+
+    .cart-checkout-actions { display: flex; flex-direction: column; gap: 0.6rem; }
+    .cart-checkout-actions .button { width: 100%; }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="#" class="brand-link" data-nav="home">
+        <img src="other image/saanjhlogo.png" alt="Saanjh" class="brand-logo" />
+        <span>Saanjh</span>
+      </a>
+      <button class="nav-toggle" id="navToggle" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+      <nav class="site-nav" id="siteNav">
+        <a href="#" data-nav="home">Home</a>
+        <a href="#" data-nav="candles">Candles</a>
+        <a href="#" data-nav="jewellery">Jewellery</a>
+        <button class="cart-btn" id="openCart" aria-label="Cart">🛒<span class="cart-count" id="cartCount">0</span></button>
+      </nav>
+    </div>
+  </header>
+
+  <main id="app">
+    <!-- HOME -->
+    <section class="page active" id="page-home" data-page="home">
+      <div class="hero">
+        <div class="hero-center">
+          <div class="logo-wrapper">
+            <img src="other image/saanjhlogo.png" alt="Saanjh Logo" class="hero-logo" />
+          </div>
+          <h1 class="hero-title">Saanjh</h1>
+          <p class="hero-tagline">Light that warms the soul</p>
+          <p class="hero-subtitle">Handcrafted luxury candles and elegant jewellery for mindful living</p>
+          <div class="hero-actions">
+            <button type="button" class="button primary" data-nav="candles">Explore Collection</button>
+            <button type="button" class="button secondary" data-scroll="home-about">Our Story</button>
+          </div>
+        </div>
+      </div>
+
+      <section class="section section-bestsellers" id="home-bestsellers">
+        <div class="container">
+          <div class="section-heading">
+            <div>
+              <p class="section-subtitle">Customer Favorites</p>
+              <h2>Bestselling Products</h2>
+            </div>
+          </div>
+          <div class="product-grid bestseller-grid" id="bestsellersGrid"></div>
+        </div>
+      </section>
+
+      <section class="section section-instagram" id="home-gallery">
+        <div class="container">
+          <div class="section-heading">
+            <div>
+              <p class="section-subtitle">Inspiration</p>
+              <h2>Gallery</h2>
+            </div>
+          </div>
+          <div class="instagram-grid" id="galleryGrid">
+            <div class="insta-card"><video class="gallery-video" muted loop playsinline preload="none" data-src="other image/istagram/IMG_5630.mp4"></video></div>
+            <div class="insta-card"><video class="gallery-video" muted loop playsinline preload="none" data-src="other image/istagram/IMG_5631.mp4"></video></div>
+            <div class="insta-card"><video class="gallery-video" muted loop playsinline preload="none" data-src="other image/istagram/IMG_5633.mp4"></video></div>
+            <div class="insta-card"><video class="gallery-video" muted loop playsinline preload="none" data-src="other image/istagram/IMG_5634.mp4"></video></div>
+            <div class="insta-card"><video class="gallery-video" muted loop playsinline preload="none" data-src="other image/istagram/IMG_5635.mp4"></video></div>
+            <div class="insta-card"><video class="gallery-video" muted loop playsinline preload="none" data-src="other image/istagram/IMG_5636.mp4"></video></div>
+            <div class="insta-card"><video class="gallery-video" muted loop playsinline preload="none" data-src="other image/istagram/IMG_5637.mp4"></video></div>
+          </div>
+          <p class="gallery-instagram-cta" style="text-align:center;margin-top:1.5rem">
+            <a href="#" id="instagramLink" class="button small" target="_blank" rel="noopener noreferrer">Follow us on Instagram</a>
+          </p>
+        </div>
+      </section>
+
+      <section class="section section-about" id="home-about">
+        <div class="container">
+          <div class="about-grid">
+            <div class="about-copy">
+              <p class="section-subtitle">About Saanjh</p>
+              <h2>Crafted for calm, designed for you</h2>
+              <p>Saanjh is a luxury candle and jewellery brand born from the belief that everyday rituals deserve beauty. Each piece is thoughtfully made to bring warmth, fragrance, and elegance into your home and style.</p>
+              <p>From hand-poured candles with curated scents to delicate jewellery that complements mindful living, we create products that feel personal, premium, and deeply soothing.</p>
+              <p>Our aesthetic blends soft neutrals, golden accents, and timeless design — because luxury should feel gentle, not loud.</p>
+            </div>
+            <div class="about-image" aria-hidden="true"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section section-faq" id="home-faq">
+        <div class="container">
+          <div class="section-heading">
+            <div>
+              <p class="section-subtitle">Help</p>
+              <h2>Shipping &amp; Returns</h2>
+            </div>
+          </div>
+          <div class="faq-list">
+            <details open>
+              <summary>How long does delivery take?</summary>
+              <p>Orders are processed within 1–2 business days. Delivery across India typically takes 3–7 business days depending on your location. You will receive updates on WhatsApp once your order ships.</p>
+            </details>
+            <details>
+              <summary>Free shipping</summary>
+              <p>Enjoy free shipping on all orders above ₹1,000. For orders below that amount, a small delivery fee may apply at checkout — we will confirm the total before dispatch.</p>
+            </details>
+            <details>
+              <summary>Returns &amp; exchanges</summary>
+              <p>Due to the handcrafted nature of our candles and jewellery, we accept returns only for damaged or defective items reported within 48 hours of delivery. Please share photos on WhatsApp and we will make it right.</p>
+            </details>
+            <details>
+              <summary>Candle care</summary>
+              <p>Trim the wick to ¼ inch before each burn. Allow the wax to melt edge-to-edge on the first use. Never leave a burning candle unattended. Keep away from drafts and flammable materials.</p>
+            </details>
+            <details>
+              <summary>Jewellery care</summary>
+              <p>Store pieces in a dry pouch, avoid water and perfume contact, and polish gently with a soft cloth. Remove before sleeping or exercising to maintain the finish.</p>
+            </details>
+          </div>
+        </div>
+      </section>
+
+      <footer class="site-footer section" id="home-contact">
+        <div class="footer-grid">
+          <div class="footer-brand">
+            <a href="#" class="brand-link" data-nav="home">
+              <img src="other image/saanjhlogo.png" alt="Saanjh" class="brand-logo" />
+              <span class="brand-text">The Saanjh Vibe</span>
+            </a>
+            <p>Luxury candles and jewellery with a warm, soothing aesthetic.</p>
+          </div>
+          <div class="footer-links">
+            <a href="#" data-nav="candles">Shop Candles</a>
+            <a href="#" data-nav="jewellery">Shop Jewellery</a>
+            <a href="#" data-scroll="home-about">About</a>
+            <a href="#" data-scroll="home-gallery">Gallery</a>
+            <a href="#" id="instagramLinkFooter" target="_blank" rel="noopener noreferrer">Instagram</a>
+          </div>
+          <div class="footer-contact">
+            <p>Email</p>
+            <a href="mailto:hello@saanjhvibe.in">hello@saanjhvibe.in</a>
+            <p style="margin-top:1rem">WhatsApp</p>
+            <a href="https://wa.me/918349206021">+91 83492 06021</a>
+            <p style="margin-top:1rem">Mobile App</p>
+            <a href="#" id="appDownloadBtn" class="button small app-download-btn">Get the App</a>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <span>© 2026 The Saanjh Vibe</span>
+          <span>Free shipping above ₹1,000</span>
+        </div>
+      </footer>
+    </section>
+
+    <!-- CANDLES -->
+    <section class="page" id="page-candles" data-page="candles">
+      <section class="section section-products">
+        <div class="container">
+          <div class="section-heading">
+            <div>
+              <p class="section-subtitle">Luxury Candles</p>
+              <h2>Signature Scents</h2>
+            </div>
+          </div>
+          <div class="product-grid" id="candlesGrid"></div>
+        </div>
+      </section>
+      <div class="shop-mini-footer">
+        <a href="mailto:hello@saanjhvibe.in">Email</a>
+        <span class="sep">·</span>
+        <a href="https://wa.me/918349206021" target="_blank" rel="noopener">WhatsApp</a>
+        <span class="sep">·</span>
+        <a href="#" class="app-download-btn">Get the App</a>
+        <span class="sep">·</span>
+        <a href="#" data-scroll="home-contact">Contact</a>
+      </div>
+    </section>
+
+    <!-- JEWELLERY -->
+    <section class="page" id="page-jewellery" data-page="jewellery">
+      <section class="section section-jewellery">
+        <div class="container">
+          <div class="section-heading">
+            <div>
+              <p class="section-subtitle">Fine Jewellery</p>
+              <h2>Elegant Pieces</h2>
+            </div>
+          </div>
+          <div class="product-grid" id="jewelleryGrid"></div>
+        </div>
+      </section>
+      <div class="shop-mini-footer">
+        <a href="mailto:hello@saanjhvibe.in">Email</a>
+        <span class="sep">·</span>
+        <a href="https://wa.me/918349206021" target="_blank" rel="noopener">WhatsApp</a>
+        <span class="sep">·</span>
+        <a href="#" class="app-download-btn">Get the App</a>
+        <span class="sep">·</span>
+        <a href="#" data-scroll="home-contact">Contact</a>
+      </div>
+    </section>
+
+    <!-- PRODUCT DETAIL -->
+    <section class="page" id="page-product" data-page="product">
+      <div class="container">
+        <nav class="breadcrumb" id="breadcrumb"></nav>
+        <div class="detail-layout" id="productDetail"></div>
+        <div class="related-section" id="relatedSection" style="display:none">
+          <h2>You may also like</h2>
+          <div class="related-grid" id="relatedGrid"></div>
+        </div>
+      </div>
+      <div class="shop-mini-footer">
+        <a href="mailto:hello@saanjhvibe.in">Email</a>
+        <span class="sep">·</span>
+        <a href="https://wa.me/918349206021" target="_blank" rel="noopener">WhatsApp</a>
+        <span class="sep">·</span>
+        <a href="#" class="app-download-btn">Get the App</a>
+        <span class="sep">·</span>
+        <a href="#" data-scroll="home-contact">Contact</a>
+      </div>
+    </section>
+
+  </main>
+
+  <div class="cart-overlay" id="cartOverlay"></div>
+  <aside class="cart-drawer" id="cartDrawer">
+    <div class="cart-header">
+      <h2>Your Cart</h2>
+      <button class="cart-close" id="closeCart" aria-label="Close">×</button>
+    </div>
+    <div class="cart-items" id="cartItems"></div>
+    <div class="cart-footer">
+      <p class="cart-total" id="cartTotal">Total: ₹0</p>
+      <div class="cart-checkout-actions">
+        <button type="button" class="button primary" id="placeOrderBtn">Place Order</button>
+        <button type="button" class="button secondary" id="checkoutBtn">Checkout via WhatsApp</button>
+      </div>
+    </div>
+  </aside>
+
+  <div id="checkoutModal" class="checkout-modal">
+    <div class="checkout-modal-content">
+      <span class="checkout-close" id="closeCheckoutModal" aria-label="Close">&times;</span>
+      <h2>Confirm Your Order</h2>
+      <form id="checkoutForm" class="checkout-form">
+        <div class="form-group">
+          <label for="customerName">Full Name *</label>
+          <input type="text" id="customerName" required placeholder="Your full name" />
+        </div>
+        <div class="form-group">
+          <label for="customerEmail">Email (optional)</label>
+          <input type="email" id="customerEmail" placeholder="you@example.com" />
+        </div>
+        <div class="form-group">
+          <label for="customerPhone">Phone Number *</label>
+          <input type="tel" id="customerPhone" required placeholder="+91 XXXXXXXXXX" />
+        </div>
+        <div class="form-group">
+          <label for="customerAddress">Delivery Address *</label>
+          <textarea id="customerAddress" required rows="3" placeholder="Full delivery address"></textarea>
+        </div>
+        <div class="order-review">
+          <h3>Order Summary</h3>
+          <ul id="reviewItems" class="review-items"></ul>
+          <div class="review-total">
+            <span>Total:</span>
+            <span id="reviewTotal">₹0</span>
+          </div>
+        </div>
+        <div class="form-actions">
+          <button type="button" class="button secondary" id="cancelCheckoutBtn">Cancel</button>
+          <button type="button" class="button primary" id="submitOrderBtn">Place Order</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    // Paste your Play Store / App Store link here when ready
+    const APP_DOWNLOAD_URL = '';
+    // Paste your Instagram profile URL when ready (e.g. https://www.instagram.com/yourhandle/)
+    const INSTAGRAM_URL = '';
+
+    const IMG = 'other image/';
+    const PRODUCTS = {
+      'daisy-daydreamer': {
+        id: 'daisy-daydreamer', category: 'candles', name: 'Daisy Daydreamer', price: 350, bestseller: true,
+        imageClass: 'product-image--daisy', cardClass: 'daisy-card',
+        image: IMG + 'daisy daydreamer/daisy daydream.jpg',
+        images: [IMG + 'daisy daydreamer/daisy daydream.jpg', IMG + 'daisy daydreamer/daisy daydream1.jpg', IMG + 'daisy daydreamer/daisy daydream2.jpg'],
+        desc: 'Boozy scent, festive fragrance party vibes happy hour aroma scented decor',
+        rating: 4.8, reviews: 48,
+        specs: { material: 'Hand-poured soy wax', burnTime: '40+ hours', dimensions: 'Luxury glass jar', care: 'Trim wick to ¼" before each burn.' }
+      },
+      'champagne-candle': {
+        id: 'champagne-candle', category: 'candles', name: 'Champagne Candle', price: 450, bestseller: true,
+        imageClass: 'product-image--champagne',
+        image: IMG + 'champage candle .jpg',
+        desc: 'Pop pour, glow — celebrate every moment with our champagne candle',
+        rating: 4.7, reviews: 36,
+        specs: { material: 'Soy wax blend', burnTime: '45 hours', dimensions: 'Signature jar', care: 'Never leave a burning candle unattended.' }
+      },
+      'cocktail-candle': {
+        id: 'cocktail-candle', category: 'candles', name: 'Cocktail Candle', price: 350,
+        imageClass: 'product-image--cocktail', cardClass: 'cocktail-card',
+        image: IMG + 'cocktail/cocktail.jpg',
+        images: [IMG + 'cocktail/cocktail.jpg', IMG + 'cocktail/cocktail1.jpg', IMG + 'cocktail/cocktail2.jpg', IMG + 'cocktail/cocktail3.jpg'],
+        desc: 'Boozy scent, festive fragrance party vibes happy hour aroma scented decor',
+        rating: 4.6, reviews: 41,
+        specs: { material: 'Hand-poured soy wax', burnTime: '38+ hours', dimensions: 'Artisan vessel', care: 'Allow full melt pool on first burn.' }
+      },
+      'vanilla-blush': {
+        id: 'vanilla-blush', category: 'candles', name: 'Vanilla Blush', price: 450, bestseller: true,
+        imageClass: 'product-image--vanilla',
+        image: IMG + 'vanilla blush candle.jpg',
+        desc: 'Two layers, one story—crystal-clear gel cradling tiny hearts beneath a soft vanilla-kissed soy top, like love hidden and waiting to glow.',
+        rating: 4.9, reviews: 62,
+        specs: { material: 'Soy & gel wax', burnTime: '42 hours', dimensions: 'Layered keepsake jar', care: 'Keep away from direct sunlight.' }
+      },
+      'velvet-ember': {
+        id: 'velvet-ember', category: 'candles', name: 'Velvet Ember', price: 1300,
+        imageClass: 'product-image--img9',
+        image: IMG + 'IMG_4928.jpg',
+        desc: 'Warm amber and soft musk wrapped in a velvet glow — an evening ritual in a flame.',
+        rating: 4.8, reviews: 28,
+        specs: { material: 'Premium soy wax', burnTime: '55 hours', dimensions: 'Large luxury jar', care: 'Store in a cool, dry place.' }
+      },
+      'amber-horizon': {
+        id: 'amber-horizon', category: 'candles', name: 'Amber Horizon', price: 1300,
+        imageClass: 'product-image--img11',
+        image: IMG + 'IMG_4931.jpg',
+        desc: 'Golden hour in a jar — resinous amber and soft woods for a cocooning atmosphere.',
+        rating: 4.7, reviews: 22,
+        specs: { material: 'Soy & coconut wax', burnTime: '50 hours', dimensions: 'Collector edition jar', care: 'Trim wick between burns.' }
+      },
+      'silk-ember': {
+        id: 'silk-ember', category: 'candles', name: 'Silk Ember', price: 1350,
+        imageClass: 'product-image--img13',
+        image: IMG + 'IMG_4933.jpg',
+        desc: 'Silky florals and smouldering embers — refined, romantic, and unmistakably Saanjh.',
+        rating: 4.8, reviews: 19,
+        specs: { material: 'Hand-poured soy wax', burnTime: '52 hours', dimensions: 'Limited batch jar', care: 'Burn on a heat-safe surface.' }
+      },
+      'signature-oud-gift': {
+        id: 'signature-oud-gift', category: 'candles', name: 'Signature Oud Gift', price: 1900,
+        imageClass: 'product-image--img1',
+        image: IMG + 'IMG_4920.jpg',
+        desc: 'Our signature oud blend in gift-ready packaging — the ultimate gesture of warmth.',
+        rating: 5.0, reviews: 15,
+        specs: { material: 'Luxury soy wax', burnTime: '60 hours', dimensions: 'Gift box set', care: 'Perfect for gifting and special occasions.' }
+      },
+      'heirloom-bloom': {
+        id: 'heirloom-bloom', category: 'jewellery', name: 'Heirloom Bloom', price: 1100, bestseller: true,
+        imageClass: 'product-image--img2',
+        image: IMG + 'IMG_4921.jpg',
+        desc: 'Delicate floral motifs with a heirloom finish — timeless elegance for everyday wear.',
+        rating: 4.8, reviews: 34,
+        specs: { material: 'Gold-tone finish', metalType: 'Hypoallergenic alloy', dimensions: 'Adjustable fit', care: 'Store in a dry pouch when not worn.' }
+      },
+      'moonlit-muse': {
+        id: 'moonlit-muse', category: 'jewellery', name: 'Moonlit Muse', price: 1350,
+        imageClass: 'product-image--img4',
+        image: IMG + 'IMG_4923.jpg',
+        desc: 'Moonlit curves and soft shimmer — jewellery that catches the light like candle glow.',
+        rating: 4.7, reviews: 27,
+        specs: { material: 'Polished metal', metalType: 'Nickel-free', dimensions: 'Statement piece', care: 'Avoid contact with perfumes and water.' }
+      },
+      'golden-aura': {
+        id: 'golden-aura', category: 'jewellery', name: 'Golden Aura', price: 1450,
+        imageClass: 'product-image--img6',
+        image: IMG + 'IMG_4926.jpg',
+        desc: 'Radiant gold tones designed to elevate your everyday ritual with quiet luxury.',
+        rating: 4.9, reviews: 31,
+        specs: { material: 'Gold-plated brass', metalType: 'Lightweight construction', dimensions: 'One size', care: 'Polish gently with a soft cloth.' }
+      },
+      'noir-glow': {
+        id: 'noir-glow', category: 'jewellery', name: 'Noir Glow', price: 1650,
+        imageClass: 'product-image--img8',
+        image: IMG + 'IMG_4927.jpg',
+        desc: 'Deep tones and luminous highlights — bold jewellery for evening saanjh moments.',
+        rating: 4.6, reviews: 18,
+        specs: { material: 'Antique finish metal', metalType: 'Durable plating', dimensions: 'Evening wear', care: 'Remove before sleeping or swimming.' }
+      },
+      'velvet-bloom': {
+        id: 'velvet-bloom', category: 'jewellery', name: 'Velvet Bloom', price: 1550,
+        imageClass: 'product-image--img12',
+        image: IMG + 'IMG_4932.jpg',
+        desc: 'Velvet-soft curves and blooming details — the finishing touch to your Saanjh look.',
+        rating: 4.8, reviews: 21,
+        specs: { material: 'Artisan metalwork', metalType: 'Hand-finished', dimensions: 'Signature Saanjh piece', care: 'Store separately to avoid scratches.' }
+      }
+    };
+
+    const CART_KEY = 'saanjh_cart';
+    let currentPage = 'home';
+    let currentProductId = null;
+
+    function getCart() {
+      try { return JSON.parse(localStorage.getItem(CART_KEY)) || []; }
+      catch { return []; }
+    }
+    function saveCart(cart) {
+      localStorage.setItem(CART_KEY, JSON.stringify(cart));
+      updateCartUI();
+    }
+    function formatPrice(n) { return '₹' + n.toLocaleString('en-IN'); }
+
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 2800);
+    }
+
+    function getBestsellerProducts(limit) {
+      const flagged = Object.values(PRODUCTS).filter(p => p.bestseller);
+      const pool = flagged.length ? flagged : Object.values(PRODUCTS);
+      return pool
+        .sort((a, b) => b.rating - a.rating || b.reviews - a.reviews || a.name.localeCompare(b.name))
+        .slice(0, limit);
+    }
+
+    function calculateTotal() {
+      return getCart().reduce((s, i) => s + i.price * i.quantity, 0);
+    }
+
+    function productCardHTML(p) {
+      const label = p.category === 'candles' ? 'Candle' : 'Jewellery';
+      return `
+        <article class="product-card ${p.cardClass || ''}" data-product="${p.id}">
+          <div class="product-image ${p.imageClass}"></div>
+          <div class="product-copy">
+            <span class="product-label">${label}</span>
+            <h3>${p.name}</h3>
+            <p>${p.desc}</p>
+            <div class="product-meta">
+              <span class="product-price">${formatPrice(p.price)}</span>
+              <button type="button" class="button small add-cart-btn" data-id="${p.id}">Add to Cart</button>
+            </div>
+          </div>
+        </article>
+      `;
+    }
+
+    function bindProductCards(grid) {
+      grid.querySelectorAll('.product-card').forEach(card => {
+        card.addEventListener('click', (e) => {
+          if (e.target.closest('.add-cart-btn')) return;
+          navigateTo('product', card.dataset.product);
+        });
+      });
+      grid.querySelectorAll('.add-cart-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          addToCart(btn.dataset.id, 1);
+        });
+      });
+    }
+
+    function scrollToHomeSection(sectionId) {
+      const el = document.getElementById(sectionId);
+      if (!el) return;
+      if (currentPage !== 'home') {
+        navigateTo('home', null, { scrollTo: sectionId });
+        const hash = sectionId === 'home-about' ? 'about' : sectionId === 'home-gallery' ? 'gallery' : sectionId === 'home-contact' ? 'contact' : sectionId === 'home-faq' ? 'faq' : 'home';
+        history.replaceState({ page: 'home', scrollTo: sectionId }, '', '#' + hash);
+      } else {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+
+    function navigateTo(page, productId, options) {
+      options = options || {};
+      currentPage = page;
+      if (productId) currentProductId = productId;
+
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      const target = document.getElementById('page-' + (page === 'product' ? 'product' : page));
+      if (target) {
+        requestAnimationFrame(() => target.classList.add('active'));
+      }
+
+      document.querySelectorAll('[data-nav]').forEach(a => {
+        a.classList.toggle('active', a.dataset.nav === page || (page === 'product' && a.dataset.nav === (PRODUCTS[productId]?.category)));
+      });
+
+      document.getElementById('siteNav').classList.remove('open');
+
+      if (page === 'home') {
+        renderBestsellers();
+        initGalleryVideos();
+      }
+      if (page === 'candles') renderProductGrid('candles');
+      if (page === 'jewellery') renderProductGrid('jewellery');
+      if (page === 'product' && productId) renderProductDetail(productId);
+
+      if (options.scrollTo) {
+        requestAnimationFrame(() => {
+          setTimeout(() => {
+            document.getElementById(options.scrollTo)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }, 80);
+        });
+      } else {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      if (!options.scrollTo) {
+        history.replaceState({ page, productId }, '', page === 'product' ? '#product/' + productId : '#' + page);
+      }
+    }
+
+    function renderBestsellers() {
+      const grid = document.getElementById('bestsellersGrid');
+      if (!grid) return;
+      grid.innerHTML = getBestsellerProducts(4).map(productCardHTML).join('');
+      bindProductCards(grid);
+    }
+
+    function renderProductGrid(category) {
+      const grid = document.getElementById(category === 'candles' ? 'candlesGrid' : 'jewelleryGrid');
+      const items = Object.values(PRODUCTS).filter(p => p.category === category);
+      grid.innerHTML = items.map(productCardHTML).join('');
+      bindProductCards(grid);
+    }
+
+    function renderProductDetail(id) {
+      const p = PRODUCTS[id];
+      if (!p) return;
+      const catLabel = p.category === 'candles' ? 'Candles' : 'Jewellery';
+      document.getElementById('breadcrumb').innerHTML = `
+        <a href="#" data-nav="${p.category}">${catLabel}</a>
+        <span>/</span>
+        <span>${p.name}</span>
+      `;
+      document.getElementById('breadcrumb').querySelector('a').addEventListener('click', e => {
+        e.preventDefault();
+        navigateTo(p.category);
+      });
+
+      const specRows = Object.entries(p.specs).map(([k, v]) => {
+        const label = k.replace(/([A-Z])/g, ' $1').replace(/^./, s => s.toUpperCase());
+        return `<div class="spec-row"><dt>${label}</dt><dd>${v}</dd></div>`;
+      }).join('');
+
+      const thumbs = p.images && p.images.length > 1
+        ? `<div class="detail-thumbs" id="detailThumbs">${p.images.map((src, i) =>
+            `<button type="button" class="detail-thumb ${i === 0 ? 'active' : ''}" data-src="${src}" aria-label="View image ${i + 1}"><img src="${src}" alt="" /></button>`
+          ).join('')}</div>` : '';
+
+      document.getElementById('productDetail').innerHTML = `
+        <div class="detail-image-wrap">
+          <img id="detailMainImage" src="${p.image}" alt="${p.name}" />
+          ${thumbs}
+        </div>
+        <div class="detail-info">
+          <h1>${p.name}</h1>
+          <p class="rating">${'★'.repeat(Math.floor(p.rating))}${p.rating % 1 >= 0.5 ? '½' : ''} <span>${p.rating} · ${p.reviews} reviews</span></p>
+          <p class="detail-price">${formatPrice(p.price)}</p>
+          <p class="detail-desc">${p.desc}</p>
+          <div class="qty-row">
+            <span class="qty-label">Quantity</span>
+            <div class="qty-control">
+              <button type="button" id="qtyMinus">−</button>
+              <input type="number" id="qtyInput" value="1" min="1" max="99" readonly />
+              <button type="button" id="qtyPlus">+</button>
+            </div>
+          </div>
+          <div class="detail-actions">
+            <button type="button" class="button primary" id="detailAddCart">Add to Cart</button>
+            <button type="button" class="button-buy" id="detailBuyNow">Buy Now</button>
+            <button type="button" class="button secondary" id="detailShare">Share on WhatsApp</button>
+          </div>
+          <div class="detail-specs">
+            <h3>Product Details</h3>
+            <dl>${specRows}</dl>
+          </div>
+        </div>
+      `;
+
+      let qty = 1;
+      const qtyInput = document.getElementById('qtyInput');
+      document.getElementById('qtyMinus').onclick = () => { if (qty > 1) { qty--; qtyInput.value = qty; } };
+      document.getElementById('qtyPlus').onclick = () => { if (qty < 99) { qty++; qtyInput.value = qty; } };
+      document.getElementById('detailAddCart').onclick = () => { addToCart(id, qty); };
+      document.getElementById('detailBuyNow').onclick = () => { addToCart(id, qty); checkoutWhatsApp(); };
+      document.getElementById('detailShare').onclick = () => shareProductWhatsApp(p, qty);
+
+      if (p.images && p.images.length > 1) {
+        const mainImg = document.getElementById('detailMainImage');
+        document.querySelectorAll('.detail-thumb').forEach(btn => {
+          btn.addEventListener('click', () => {
+            mainImg.src = btn.dataset.src;
+            document.querySelectorAll('.detail-thumb').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+          });
+        });
+      }
+
+      const related = Object.values(PRODUCTS)
+        .filter(x => x.category === p.category && x.id !== id)
+        .slice(0, 4);
+      const relatedSection = document.getElementById('relatedSection');
+      const relatedGrid = document.getElementById('relatedGrid');
+      if (related.length) {
+        relatedSection.style.display = 'block';
+        relatedGrid.innerHTML = related.map(r => `
+          <div class="related-card" data-product="${r.id}">
+            <img src="${r.image}" alt="${r.name}" loading="lazy" />
+            <p>${r.name} · ${formatPrice(r.price)}</p>
+          </div>
+        `).join('');
+        relatedGrid.querySelectorAll('.related-card').forEach(c => {
+          c.addEventListener('click', () => navigateTo('product', c.dataset.product));
+        });
+      } else {
+        relatedSection.style.display = 'none';
+      }
+    }
+
+    function addToCart(productId, quantity) {
+      const p = PRODUCTS[productId];
+      if (!p) return;
+      const cart = getCart();
+      const existing = cart.find(i => i.id === productId);
+      if (existing) existing.quantity += quantity;
+      else cart.push({ id: productId, name: p.name, price: p.price, image: p.image, quantity });
+      saveCart(cart);
+      showToast(p.name + ' added to cart!');
+    }
+
+    function updateCartUI() {
+      const cart = getCart();
+      const count = cart.reduce((s, i) => s + i.quantity, 0);
+      document.getElementById('cartCount').textContent = count;
+      const el = document.getElementById('cartItems');
+      if (!cart.length) {
+        el.innerHTML = '<p class="cart-empty">Your cart is empty</p>';
+        document.getElementById('cartTotal').textContent = 'Total: ₹0';
+        return;
+      }
+      el.innerHTML = cart.map(i => `
+        <div class="cart-item">
+          <img src="${i.image}" alt="${i.name}" />
+          <div class="cart-item-info">
+            <div class="cart-item-header">
+              <h4>${i.name}</h4>
+              <button type="button" class="cart-item-remove" data-id="${i.id}" aria-label="Remove item">×</button>
+            </div>
+            <p class="cart-item-price">${formatPrice(i.price)}</p>
+            <div class="cart-item-controls">
+              <div class="cart-qty-control">
+                <button type="button" class="cart-qty-btn qty-minus" data-id="${i.id}">−</button>
+                <span class="cart-qty-val">${i.quantity}</span>
+                <button type="button" class="cart-qty-btn qty-plus" data-id="${i.id}">+</button>
+              </div>
+              <span class="cart-item-subtotal">${formatPrice(i.price * i.quantity)}</span>
+            </div>
+          </div>
+        </div>
+      `).join('');
+
+      // Bind quantity and remove event listeners
+      el.querySelectorAll('.qty-minus').forEach(btn => {
+        btn.onclick = () => changeCartQty(btn.dataset.id, -1);
+      });
+      el.querySelectorAll('.qty-plus').forEach(btn => {
+        btn.onclick = () => changeCartQty(btn.dataset.id, 1);
+      });
+      el.querySelectorAll('.cart-item-remove').forEach(btn => {
+        btn.onclick = () => removeFromCart(btn.dataset.id);
+      });
+
+      const total = cart.reduce((s, i) => s + i.price * i.quantity, 0);
+      document.getElementById('cartTotal').textContent = 'Total: ' + formatPrice(total);
+    }
+
+    function changeCartQty(productId, delta) {
+      const cart = getCart();
+      const existing = cart.find(i => i.id === productId);
+      if (!existing) return;
+      existing.quantity += delta;
+      if (existing.quantity <= 0) {
+        removeFromCart(productId);
+      } else {
+        saveCart(cart);
+      }
+    }
+
+    function removeFromCart(productId) {
+      const cart = getCart();
+      const item = cart.find(i => i.id === productId);
+      const filtered = cart.filter(i => i.id !== productId);
+      saveCart(filtered);
+      if (item) {
+        showToast(item.name + ' removed from cart');
+      }
+    }
+
+    function openCart() {
+      document.getElementById('cartOverlay').classList.add('open');
+      document.getElementById('cartDrawer').classList.add('open');
+    }
+    function closeCart() {
+      document.getElementById('cartOverlay').classList.remove('open');
+      document.getElementById('cartDrawer').classList.remove('open');
+    }
+
+    function checkoutWhatsApp() {
+      const cart = getCart();
+      if (!cart.length) { showToast('Your cart is empty'); return; }
+      let msg = '*Saanjh - Order Request*\n\nHello! I would like to order:\n\n';
+      cart.forEach(i => {
+        msg += `• ${i.name} × ${i.quantity} = ${formatPrice(i.price * i.quantity)}\n`;
+      });
+      msg += `\n*Total: ${formatPrice(calculateTotal())}*\n\nPlease confirm delivery details. Thank you!`;
+      window.open('https://wa.me/918349206021?text=' + encodeURIComponent(msg), '_blank');
+    }
+
+    function shareProductWhatsApp(p, qty) {
+      const url = window.location.href.split('#')[0] + '#product/' + p.id;
+      const msg = `Hi! I'm interested in *${p.name}* (${formatPrice(p.price)} × ${qty}).\n\n${url}`;
+      window.open('https://wa.me/918349206021?text=' + encodeURIComponent(msg), '_blank');
+    }
+
+    function openCheckoutModal() {
+      const cart = getCart();
+      if (!cart.length) { showToast('Your cart is empty'); return; }
+      closeCart();
+      document.getElementById('reviewItems').innerHTML = cart.map(i => `
+        <li class="review-item"><span>${i.name} × ${i.quantity}</span><span>${formatPrice(i.price * i.quantity)}</span></li>
+      `).join('');
+      document.getElementById('reviewTotal').textContent = formatPrice(calculateTotal());
+      document.getElementById('checkoutModal').classList.add('show');
+    }
+
+    function closeCheckoutModal() {
+      document.getElementById('checkoutModal').classList.remove('show');
+    }
+
+    async function submitOrder() {
+      const cart = getCart();
+      if (!cart.length) { showToast('Your cart is empty'); return; }
+
+      const name = document.getElementById('customerName').value.trim();
+      const email = document.getElementById('customerEmail').value.trim();
+      const phone = document.getElementById('customerPhone').value.trim();
+      const address = document.getElementById('customerAddress').value.trim();
+
+      if (!name || !phone || !address) {
+        showToast('Please fill in name, phone, and address.');
+        return;
+      }
+
+      const submitBtn = document.getElementById('submitOrderBtn');
+      const originalText = submitBtn.textContent;
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Processing...';
+
+      try {
+        const response = await fetch('/api/orders', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            customerName: name,
+            customerEmail: email,
+            customerPhone: phone,
+            customerAddress: address,
+            items: cart,
+            totalAmount: calculateTotal()
+          })
+        });
+        const data = await response.json();
+
+        if (response.ok && data.success) {
+          showToast('Order placed! Order #' + data.orderId);
+          document.getElementById('checkoutForm').reset();
+          closeCheckoutModal();
+          saveCart([]);
+          setTimeout(() => {
+            alert(`Your order has been placed!\n\nOrder ID: #${data.orderId}\n\nWe will contact you at ${phone}.`);
+          }, 400);
+        } else {
+          showToast('Error: ' + (data.error || 'Failed to place order'));
+        }
+      } catch (err) {
+        console.error(err);
+        showToast('Could not submit order. Is the server running?');
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalText;
+      }
+    }
+
+    function initGalleryVideos() {
+      const videos = document.querySelectorAll('.gallery-video');
+      if (!videos.length) return;
+      if (window._galleryObserver) return;
+
+      window._galleryObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          const video = entry.target;
+          if (entry.isIntersecting) {
+            const src = video.dataset.src;
+            if (src && !video.getAttribute('src')) {
+              video.src = src;
+              video.load();
+            }
+            video.play().catch(() => {});
+          } else {
+            video.pause();
+          }
+        });
+      }, { rootMargin: '80px', threshold: 0.2 });
+
+      videos.forEach(v => window._galleryObserver.observe(v));
+    }
+
+    function initExternalLinks() {
+      document.querySelectorAll('.app-download-btn').forEach(btn => {
+        if (btn._appBound) return;
+        btn._appBound = true;
+        btn.addEventListener('click', (e) => {
+          if (!APP_DOWNLOAD_URL) {
+            e.preventDefault();
+            showToast('App download link coming soon.');
+          }
+        });
+        if (APP_DOWNLOAD_URL) {
+          btn.href = APP_DOWNLOAD_URL;
+          btn.target = '_blank';
+          btn.rel = 'noopener noreferrer';
+        }
+      });
+
+      document.querySelectorAll('#instagramLink, #instagramLinkFooter').forEach(link => {
+        if (INSTAGRAM_URL) {
+          link.href = INSTAGRAM_URL;
+        } else if (!link._igBound) {
+          link._igBound = true;
+          link.addEventListener('click', (e) => {
+            e.preventDefault();
+            showToast('Instagram link coming soon.');
+          });
+        }
+      });
+    }
+
+    function parseHash() {
+      const hash = location.hash.slice(1) || 'home';
+      if (hash.startsWith('product/')) {
+        const id = hash.split('/')[1];
+        if (PRODUCTS[id]) navigateTo('product', id);
+        else navigateTo('home');
+      } else if (hash === 'about') {
+        navigateTo('home', null, { scrollTo: 'home-about' });
+      } else if (hash === 'gallery') {
+        navigateTo('home', null, { scrollTo: 'home-gallery' });
+      } else if (hash === 'contact') {
+        navigateTo('home', null, { scrollTo: 'home-contact' });
+      } else if (hash === 'faq') {
+        navigateTo('home', null, { scrollTo: 'home-faq' });
+      } else if (['home', 'candles', 'jewellery'].includes(hash)) {
+        navigateTo(hash);
+      } else {
+        navigateTo('home');
+      }
+    }
+
+    document.querySelectorAll('[data-nav]').forEach(el => {
+      el.addEventListener('click', e => {
+        e.preventDefault();
+        navigateTo(el.dataset.nav);
+      });
+    });
+
+    document.querySelectorAll('[data-scroll]').forEach(el => {
+      el.addEventListener('click', e => {
+        e.preventDefault();
+        scrollToHomeSection(el.dataset.scroll);
+      });
+    });
+
+    document.getElementById('navToggle').addEventListener('click', () => {
+      document.getElementById('siteNav').classList.toggle('open');
+    });
+
+    document.getElementById('openCart').addEventListener('click', openCart);
+    document.getElementById('closeCart').addEventListener('click', closeCart);
+    document.getElementById('cartOverlay').addEventListener('click', closeCart);
+    document.getElementById('checkoutBtn').addEventListener('click', checkoutWhatsApp);
+    document.getElementById('placeOrderBtn').addEventListener('click', openCheckoutModal);
+    document.getElementById('closeCheckoutModal').addEventListener('click', closeCheckoutModal);
+    document.getElementById('cancelCheckoutBtn').addEventListener('click', closeCheckoutModal);
+    document.getElementById('submitOrderBtn').addEventListener('click', submitOrder);
+    document.getElementById('checkoutModal').addEventListener('click', (e) => {
+      if (e.target.id === 'checkoutModal') closeCheckoutModal();
+    });
+
+    window.addEventListener('popstate', parseHash);
+    updateCartUI();
+    renderBestsellers();
+    initGalleryVideos();
+    initExternalLinks();
+    parseHash();
+  </script>
+</body>
+</html>

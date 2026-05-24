@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Cart - Saanjh</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header>
+  <div class="logo"><a href="index.html" style="color: inherit; text-decoration: none;">SAANJH</a></div>
+</header>
+
+<main class="cart-container">
+  <h2>Your Cart</h2>
+
+  <ul id="cart-items" class="cart-items-list"></ul>
+  
+  <div class="cart-summary">
+    <h3 id="total"></h3>
+    <div class="checkout-buttons">
+      <button id="checkout-btn" class="button primary checkout-btn" onclick="openCheckoutForm()">
+        Place Order 📝
+      </button>
+      <button class="button secondary checkout-btn" onclick="checkoutViaWhatsApp()">
+        Checkout via WhatsApp 📦
+      </button>
+    </div>
+    <a href="index.html" class="button secondary" style="display: inline-block; margin-top: 10px;">Continue Shopping</a>
+  </div>
+</main>
+
+<!-- Checkout Modal -->
+<div id="checkoutModal" class="checkout-modal">
+  <div class="checkout-modal-content">
+    <span class="checkout-close" onclick="closeCheckoutForm()">&times;</span>
+    <h2>Confirm Your Order</h2>
+    
+    <form id="checkoutForm" class="checkout-form">
+      <div class="form-group">
+        <label for="customerName">Full Name *</label>
+        <input type="text" id="customerName" name="customerName" required placeholder="Your full name">
+      </div>
+
+      <div class="form-group">
+        <label for="customerEmail">Email (optional)</label>
+        <input type="email" id="customerEmail" name="customerEmail" placeholder="your@email.com">
+      </div>
+
+      <div class="form-group">
+        <label for="customerPhone">Phone Number *</label>
+        <input type="tel" id="customerPhone" name="customerPhone" required placeholder="+91 XXXXXXXXXX">
+      </div>
+
+      <div class="form-group">
+        <label for="customerAddress">Delivery Address *</label>
+        <textarea id="customerAddress" name="customerAddress" required placeholder="Enter your full delivery address" rows="3"></textarea>
+      </div>
+
+      <div class="order-review">
+        <h3>Order Summary</h3>
+        <ul id="reviewItems" class="review-items"></ul>
+        <div class="review-total">
+          <span>Total Amount:</span>
+          <span id="reviewTotal" style="font-weight: 700; color: #D4A574; font-size: 1.2rem;">₹0</span>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="button secondary" onclick="closeCheckoutForm()">Cancel</button>
+        <button type="button" id="submitOrderBtn" class="button primary" onclick="submitOrder()">Place Order</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="script.js"></script>
+<script>
+// Update order review when modal opens
+document.addEventListener('click', function(e) {
+  if (e.target.id === 'checkout-btn' || e.target.textContent.includes('Place Order')) {
+    setTimeout(function() {
+      const cart = getCartItems();
+      const reviewItemsEl = document.getElementById('reviewItems');
+      reviewItemsEl.innerHTML = cart.map(item => `
+        <li class="review-item">
+          <span>${item.name} × ${item.quantity}</span>
+          <span>₹${(item.price * item.quantity).toFixed(2)}</span>
+        </li>
+      `).join('');
+      document.getElementById('reviewTotal').textContent = '₹' + calculateTotal().toFixed(2);
+    }, 50);
+  }
+});
+
+// Close modal when clicking outside
+window.onclick = function(event) {
+  const modal = document.getElementById('checkoutModal');
+  if (event.target == modal) {
+    modal.classList.remove('show');
+  }
+};
+</script>
+</body>
+</html>

@@ -1,0 +1,21 @@
+=========================================== 
+  🔍 NODE.JS DIAGNOSTIC LOG 🔍 
+=========================================== 
+Date: 24-05-2026  1:14:43.22 
+ 
+=== CURRENT SESSION PATH === 
+C:\Python314\Scripts\;C:\Python314\;C:\Program Files\Java\jdk-25\bin;C:\Program Files\dotnet\;C:\Program Files\nodejs\;C:\Users\Mayan\AppData\Local\Microsoft\WindowsApps;C:\msys64\ucrt64\bin;C:\MinGW\bin;C:\Users\Mayan\AppData\Local\Programs\Microsoft VS Code\bin;C:\ProgramData\Mayan\GitHubDesktop\bin;C:\Users\Mayan\AppData\Local\GitHubDesktop\bin;C:\Users\Mayan\AppData\Local\Programs\Python\Python312\;C:\Users\Mayan\AppData\Local\Programs\Python\Python312\Scripts\;C:\Python314\Scripts;C:\Users\Mayan\AppData\Local\Programs\Ollama;C:\Users\Mayan\.local\bin;C:\Users\Mayan\.local\bin\claude.exe;C:\Users\Mayan\AppData\Local\Programs\cursor\resources\app\bin;C:\Users\Mayan\AppData\Roaming\npm 
+ 
+=== WHERE NODE RESULT === 
+'where' is not recognized as an internal or external command,
+operable program or batch file.
+ 
+=== DETECTED SYSTEM VARIABLES === 
+ProgramFiles: C:\Program Files 
+ProgramFiles(x86): C:\Program Files (x86) 
+LocalAppData: C:\Users\Mayan\AppData\Local 
+UserProfile: C:\Users\Mayan 
+ 
+=== SCANNING KNOWN LOCATIONS === 
+[FOUND] C:\Program Files\nodejs\node.exe 
+[FOUND] C:\Program Files\nodejs\node.exe 
