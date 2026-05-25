@@ -18,8 +18,41 @@
   <style>
     /* SPA-only overrides (original look from style.css) */
     .site-nav a.active { color: var(--gold); }
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-left: 0.5rem;
+    }
+    .header-app-btn {
+      padding: 0.45rem 0.9rem;
+      font-size: 0.72rem;
+      letter-spacing: 0.06em;
+      white-space: nowrap;
+    }
+    .product-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .hero-corporate {
+      margin-top: 1.25rem;
+      text-align: center;
+    }
+    .hero-corporate-btn {
+      font-size: 0.8rem;
+      letter-spacing: 0.08em;
+      padding: 0.65rem 1.35rem;
+      border-color: rgba(212, 165, 116, 0.5);
+    }
+    .hero-corporate-btn:hover {
+      border-color: var(--gold);
+      color: var(--gold-dark);
+    }
     .cart-btn {
       position: relative; background: transparent; font-size: 1.25rem; padding: 0.25rem; cursor: pointer;
+      border: none;
     }
     .cart-count {
       position: absolute; top: -4px; right: -6px;
@@ -274,7 +307,10 @@
         <a href="#" data-nav="home">Home</a>
         <a href="#" data-nav="candles">Candles</a>
         <a href="#" data-nav="jewellery">Jewellery</a>
-        <button class="cart-btn" id="openCart" aria-label="Cart">🛒<span class="cart-count" id="cartCount">0</span></button>
+        <div class="nav-actions">
+          <a href="#" class="button small header-app-btn app-download-btn">Get the App</a>
+          <button type="button" class="cart-btn" id="openCart" aria-label="Cart">🛒<span class="cart-count" id="cartCount">0</span></button>
+        </div>
       </nav>
     </div>
   </header>
@@ -291,8 +327,11 @@
           <p class="hero-tagline">Light that warms the soul</p>
           <p class="hero-subtitle">Handcrafted luxury candles and elegant jewellery for mindful living</p>
           <div class="hero-actions">
-            <button type="button" class="button primary" data-nav="candles">Explore Collection</button>
-            <button type="button" class="button secondary" data-scroll="home-about">Our Story</button>
+            <button type="button" class="button primary" data-nav="candles">Candles</button>
+            <button type="button" class="button secondary" data-nav="jewellery">Jewellery</button>
+          </div>
+          <div class="hero-corporate">
+            <a href="https://wa.me/918349206021?text=Hi%20Saanjh%2C%20I%20would%20like%20to%20enquire%20about%20a%20corporate%20order." class="button ghost hero-corporate-btn" target="_blank" rel="noopener noreferrer">Corporate Order Enquire</a>
           </div>
         </div>
       </div>
@@ -401,8 +440,6 @@
             <a href="mailto:hello@saanjhvibe.in">hello@saanjhvibe.in</a>
             <p style="margin-top:1rem">WhatsApp</p>
             <a href="https://wa.me/918349206021">+91 83492 06021</a>
-            <p style="margin-top:1rem">Mobile App</p>
-            <a href="#" id="appDownloadBtn" class="button small app-download-btn">Get the App</a>
           </div>
         </div>
         <div class="footer-bottom">
@@ -430,8 +467,6 @@
         <span class="sep">·</span>
         <a href="https://wa.me/918349206021" target="_blank" rel="noopener">WhatsApp</a>
         <span class="sep">·</span>
-        <a href="#" class="app-download-btn">Get the App</a>
-        <span class="sep">·</span>
         <a href="#" data-scroll="home-contact">Contact</a>
       </div>
     </section>
@@ -454,8 +489,6 @@
         <span class="sep">·</span>
         <a href="https://wa.me/918349206021" target="_blank" rel="noopener">WhatsApp</a>
         <span class="sep">·</span>
-        <a href="#" class="app-download-btn">Get the App</a>
-        <span class="sep">·</span>
         <a href="#" data-scroll="home-contact">Contact</a>
       </div>
     </section>
@@ -474,8 +507,6 @@
         <a href="mailto:hello@saanjhvibe.in">Email</a>
         <span class="sep">·</span>
         <a href="https://wa.me/918349206021" target="_blank" rel="noopener">WhatsApp</a>
-        <span class="sep">·</span>
-        <a href="#" class="app-download-btn">Get the App</a>
         <span class="sep">·</span>
         <a href="#" data-scroll="home-contact">Contact</a>
       </div>
@@ -545,6 +576,7 @@
     const INSTAGRAM_URL = '';
 
     const IMG = 'other image/';
+    const CANDLE_IMG = IMG + 'candles/';
     const PRODUCTS = {
       'daisy-daydreamer': {
         id: 'daisy-daydreamer', category: 'candles', name: 'Daisy Daydreamer', price: 350, bestseller: true,
@@ -573,48 +605,105 @@
         specs: { material: 'Hand-poured soy wax', burnTime: '38+ hours', dimensions: 'Artisan vessel', care: 'Allow full melt pool on first burn.' }
       },
       'vanilla-blush': {
-        id: 'vanilla-blush', category: 'candles', name: 'Vanilla Blush', price: 450, bestseller: true,
-        imageClass: 'product-image--vanilla',
-        image: IMG + 'vanilla blush candle.jpg',
-        desc: 'Two layers, one story—crystal-clear gel cradling tiny hearts beneath a soft vanilla-kissed soy top, like love hidden and waiting to glow.',
+        id: 'vanilla-blush', category: 'candles', name: 'Vanilla Blush', price: 499, bestseller: true,
+        image: CANDLE_IMG + 'vanilla-blush-candle.png',
+        desc: 'Romantic layered jar candle with red heart embeds in clear gel and a creamy vanilla top.',
         rating: 4.9, reviews: 62,
-        specs: { material: 'Soy & gel wax', burnTime: '42 hours', dimensions: 'Layered keepsake jar', care: 'Keep away from direct sunlight.' }
+        specs: { material: 'Soy & gel wax', burnTime: '42 hours', dimensions: 'Glass keepsake jar', care: 'Keep away from direct sunlight.' }
       },
-      'velvet-ember': {
-        id: 'velvet-ember', category: 'candles', name: 'Velvet Ember', price: 1300,
-        imageClass: 'product-image--img9',
-        image: IMG + 'IMG_4928.jpg',
-        desc: 'Warm amber and soft musk wrapped in a velvet glow — an evening ritual in a flame.',
-        rating: 4.8, reviews: 28,
-        specs: { material: 'Premium soy wax', burnTime: '55 hours', dimensions: 'Large luxury jar', care: 'Store in a cool, dry place.' }
+      'rose-heart-candle': {
+        id: 'rose-heart-candle', category: 'candles', name: 'Rose Heart Candle', price: 499,
+        image: CANDLE_IMG + 'rose-heart-candle.png',
+        desc: 'Hand-sculpted heart-shaped rose candles in rich red and soft blush—perfect for gifting.',
+        rating: 4.8, reviews: 24,
+        specs: { material: 'Hand-poured wax', burnTime: '20+ hours', dimensions: 'Heart rose pair', care: 'Trim wick before each burn.' }
       },
-      'amber-horizon': {
-        id: 'amber-horizon', category: 'candles', name: 'Amber Horizon', price: 1300,
-        imageClass: 'product-image--img11',
-        image: IMG + 'IMG_4931.jpg',
-        desc: 'Golden hour in a jar — resinous amber and soft woods for a cocooning atmosphere.',
+      'peony-candle': {
+        id: 'peony-candle', category: 'candles', name: 'Peony Candle', price: 499,
+        image: CANDLE_IMG + 'peony-candle.png',
+        desc: 'Artisan peony-shaped candle in soft blush pink with delicate layered petals.',
+        rating: 4.9, reviews: 31,
+        specs: { material: 'Premium wax', burnTime: '25+ hours', dimensions: 'Floral sculpt', care: 'Place on a heat-safe dish.' }
+      },
+      'sunflower-jar-candle': {
+        id: 'sunflower-jar-candle', category: 'candles', name: 'Sunflower Jar Candle', price: 549,
+        image: CANDLE_IMG + 'sunflower-jar-candle.png',
+        desc: 'Cheerful clear-glass jar candle topped with a realistic hand-crafted sunflower.',
+        rating: 4.8, reviews: 27,
+        specs: { material: 'Soy wax', burnTime: '35+ hours', dimensions: 'Glass jar', care: 'Never leave unattended while lit.' }
+      },
+      'teddy-rose-candle': {
+        id: 'teddy-rose-candle', category: 'candles', name: 'Teddy Rose Candle', price: 549,
+        image: CANDLE_IMG + 'teddy-rose-candle.png',
+        desc: 'Adorable rose-textured teddy bear candles holding a heart—available in cream and pink.',
+        rating: 4.9, reviews: 35,
+        specs: { material: 'Decorative wax', burnTime: '22+ hours', dimensions: 'Bear figurine', care: 'Keep away from direct heat.' }
+      },
+      'birthday-bowl-candle': {
+        id: 'birthday-bowl-candle', category: 'candles', name: 'Birthday Bowl Candle', price: 599,
+        image: CANDLE_IMG + 'birthday-bowl-candle.png',
+        desc: 'Heart wooden bowl candle with floral red wax and Happy Birthday bead message in gift box.',
+        rating: 5.0, reviews: 19,
+        specs: { material: 'Wood bowl & wax', burnTime: '30+ hours', dimensions: 'Gift box set', care: 'Ideal for celebrations and gifting.' }
+      },
+      'red-heart-tin-candle': {
+        id: 'red-heart-tin-candle', category: 'candles', name: 'Red Heart Tin Candle', price: 449,
+        image: CANDLE_IMG + 'red-heart-tin-candle.png',
+        desc: 'Romantic heart-shaped red tin candle with smooth cream wax—compact and gift-ready.',
         rating: 4.7, reviews: 22,
-        specs: { material: 'Soy & coconut wax', burnTime: '50 hours', dimensions: 'Collector edition jar', care: 'Trim wick between burns.' }
+        specs: { material: 'Soy wax in metal tin', burnTime: '18+ hours', dimensions: 'Heart tin', care: 'Allow wax to cool before moving.' }
       },
-      'silk-ember': {
-        id: 'silk-ember', category: 'candles', name: 'Silk Ember', price: 1350,
-        imageClass: 'product-image--img13',
-        image: IMG + 'IMG_4933.jpg',
-        desc: 'Silky florals and smouldering embers — refined, romantic, and unmistakably Saanjh.',
-        rating: 4.8, reviews: 19,
-        specs: { material: 'Hand-poured soy wax', burnTime: '52 hours', dimensions: 'Limited batch jar', care: 'Burn on a heat-safe surface.' }
+      'blue-skies-candle': {
+        id: 'blue-skies-candle', category: 'candles', name: 'Blue Skies Candle', price: 549,
+        image: CANDLE_IMG + 'blue-skies-candle.png',
+        desc: 'Dreamy sky-blue jar candle topped with fluffy white wax clouds—calm and airy.',
+        rating: 4.8, reviews: 26,
+        specs: { material: 'Coconut & soy wax', burnTime: '50+ hours', dimensions: '12oz glass jar', care: 'Trim wooden wick to ⅛ inch.' }
       },
-      'signature-oud-gift': {
-        id: 'signature-oud-gift', category: 'candles', name: 'Signature Oud Gift', price: 1900,
-        imageClass: 'product-image--img1',
-        image: IMG + 'IMG_4920.jpg',
-        desc: 'Our signature oud blend in gift-ready packaging — the ultimate gesture of warmth.',
-        rating: 5.0, reviews: 15,
-        specs: { material: 'Luxury soy wax', burnTime: '60 hours', dimensions: 'Gift box set', care: 'Perfect for gifting and special occasions.' }
+      'iced-latte-candle': {
+        id: 'iced-latte-candle', category: 'candles', name: 'Iced Latte Candle', price: 499,
+        image: CANDLE_IMG + 'iced-latte-candle.png',
+        desc: 'Realistic iced coffee candle with cream layers and translucent wax ice cubes.',
+        rating: 4.9, reviews: 33,
+        specs: { material: 'Layered soy wax', burnTime: '40+ hours', dimensions: 'Glass tumbler', care: 'Burn on a coaster or heat-safe surface.' }
+      },
+      'rose-pearl-urli': {
+        id: 'rose-pearl-urli', category: 'candles', name: 'Rose Pearl Urli Candle', price: 599,
+        image: CANDLE_IMG + 'rose-pearl-urli-candle.png',
+        desc: 'Luxurious gold urli candle with white pearls and dried rose petals—elegant décor piece.',
+        rating: 4.9, reviews: 17,
+        specs: { material: 'Urli bowl & soy wax', burnTime: '28+ hours', dimensions: 'Scalloped gold bowl', care: 'Dust gently when not in use.' }
+      },
+      'golden-bloom-floral': {
+        id: 'golden-bloom-floral', category: 'candles', name: 'Golden Bloom Floral Candle', price: 579,
+        image: CANDLE_IMG + 'golden-bloom-floral.png',
+        desc: 'Sunflower and daisy wax blooms in gold-rimmed scalloped tins with pearl accents.',
+        rating: 4.8, reviews: 21,
+        specs: { material: 'Handcrafted wax florals', burnTime: '32+ hours', dimensions: 'Gold-rim set', care: 'Store in a cool, dry place.' }
+      },
+      'rose-crystal-heart': {
+        id: 'rose-crystal-heart', category: 'candles', name: 'Rose Crystal Heart Candle', price: 479,
+        image: CANDLE_IMG + 'rose-crystal-heart.png',
+        desc: 'Pink heart tealights with dried rose petals and crystal accents—romantic and handmade.',
+        rating: 4.7, reviews: 29,
+        specs: { material: 'Soy wax tealight', burnTime: '6+ hours each', dimensions: 'Heart set', care: 'Use on a stable, heat-safe tray.' }
+      },
+      'sweetheart-bear-candle': {
+        id: 'sweetheart-bear-candle', category: 'candles', name: 'Sweetheart Bear Candle', price: 449,
+        image: CANDLE_IMG + 'sweetheart-bear-candle.png',
+        desc: 'Cute pink heart candles topped with miniature white teddy bears—kawaii gift favourite.',
+        rating: 4.8, reviews: 38,
+        specs: { material: 'Soy wax', burnTime: '8+ hours each', dimensions: 'Mini heart set', care: 'Perfect for shelves and gifting.' }
+      },
+      'evil-eye-heart-tealight': {
+        id: 'evil-eye-heart-tealight', category: 'candles', name: 'Evil Eye Heart Tealight', price: 399,
+        image: CANDLE_IMG + 'evil-eye-heart-tealight.png',
+        desc: 'Protective evil-eye heart tealights with iridescent shimmer—serene and aesthetic.',
+        rating: 4.6, reviews: 25,
+        specs: { material: 'Soy wax tealight', burnTime: '5+ hours each', dimensions: 'Heart tealight set', care: 'Never leave burning candles unattended.' }
       },
       'heirloom-bloom': {
         id: 'heirloom-bloom', category: 'jewellery', name: 'Heirloom Bloom', price: 1100, bestseller: true,
-        imageClass: 'product-image--img2',
         image: IMG + 'IMG_4921.jpg',
         desc: 'Delicate floral motifs with a heirloom finish — timeless elegance for everyday wear.',
         rating: 4.8, reviews: 34,
@@ -622,7 +711,6 @@
       },
       'moonlit-muse': {
         id: 'moonlit-muse', category: 'jewellery', name: 'Moonlit Muse', price: 1350,
-        imageClass: 'product-image--img4',
         image: IMG + 'IMG_4923.jpg',
         desc: 'Moonlit curves and soft shimmer — jewellery that catches the light like candle glow.',
         rating: 4.7, reviews: 27,
@@ -630,7 +718,6 @@
       },
       'golden-aura': {
         id: 'golden-aura', category: 'jewellery', name: 'Golden Aura', price: 1450,
-        imageClass: 'product-image--img6',
         image: IMG + 'IMG_4926.jpg',
         desc: 'Radiant gold tones designed to elevate your everyday ritual with quiet luxury.',
         rating: 4.9, reviews: 31,
@@ -638,7 +725,6 @@
       },
       'noir-glow': {
         id: 'noir-glow', category: 'jewellery', name: 'Noir Glow', price: 1650,
-        imageClass: 'product-image--img8',
         image: IMG + 'IMG_4927.jpg',
         desc: 'Deep tones and luminous highlights — bold jewellery for evening saanjh moments.',
         rating: 4.6, reviews: 18,
@@ -646,17 +732,58 @@
       },
       'velvet-bloom': {
         id: 'velvet-bloom', category: 'jewellery', name: 'Velvet Bloom', price: 1550,
-        imageClass: 'product-image--img12',
         image: IMG + 'IMG_4932.jpg',
         desc: 'Velvet-soft curves and blooming details — the finishing touch to your Saanjh look.',
         rating: 4.8, reviews: 21,
         specs: { material: 'Artisan metalwork', metalType: 'Hand-finished', dimensions: 'Signature Saanjh piece', care: 'Store separately to avoid scratches.' }
+      },
+      'velvet-ember': {
+        id: 'velvet-ember', category: 'jewellery', name: 'Velvet Ember', price: 499,
+        image: IMG + 'IMG_4928.jpg',
+        desc: 'Warm-toned statement jewellery with a soft velvet finish and evening glow.',
+        rating: 4.8, reviews: 28,
+        specs: { material: 'Gold-tone finish', metalType: 'Hypoallergenic alloy', dimensions: 'Statement piece', care: 'Store in a dry pouch when not worn.' }
+      },
+      'amber-horizon': {
+        id: 'amber-horizon', category: 'jewellery', name: 'Amber Horizon', price: 549,
+        image: IMG + 'IMG_4931.jpg',
+        desc: 'Golden amber hues in an elegant piece inspired by sunset warmth.',
+        rating: 4.7, reviews: 22,
+        specs: { material: 'Polished metal', metalType: 'Nickel-free', dimensions: 'Adjustable fit', care: 'Avoid contact with perfumes and water.' }
+      },
+      'silk-ember': {
+        id: 'silk-ember', category: 'jewellery', name: 'Silk Ember', price: 579,
+        image: IMG + 'IMG_4933.jpg',
+        desc: 'Silky florals and soft shimmer — refined jewellery for mindful living.',
+        rating: 4.8, reviews: 19,
+        specs: { material: 'Hand-finished metal', metalType: 'Lightweight', dimensions: 'Signature design', care: 'Polish gently with a soft cloth.' }
+      },
+      'signature-oud-gift': {
+        id: 'signature-oud-gift', category: 'jewellery', name: 'Signature Oud Gift', price: 599,
+        image: IMG + 'IMG_4920.jpg',
+        desc: 'Signature Saanjh gift piece with rich detailing — perfect for special occasions.',
+        rating: 5.0, reviews: 15,
+        specs: { material: 'Premium finish', metalType: 'Gift-ready packaging', dimensions: 'Collector piece', care: 'Keep in original box when storing.' }
+      },
+      'pastel-heart-jewel': {
+        id: 'pastel-heart-jewel', category: 'jewellery', name: 'Pastel Heart Set', price: 429,
+        image: CANDLE_IMG + 'pastel-heart-tealights.png',
+        desc: 'Delicate pastel heart-inspired jewellery set in soft romantic tones.',
+        rating: 4.7, reviews: 30,
+        specs: { material: 'Mixed finish', metalType: 'Lightweight set', dimensions: 'Multi-piece set', care: 'Store pieces separately to avoid scratches.' }
       }
     };
 
     const CART_KEY = 'saanjh_cart';
     let currentPage = 'home';
     let currentProductId = null;
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
 
     function getCart() {
       try { return JSON.parse(localStorage.getItem(CART_KEY)) || []; }
@@ -689,9 +816,13 @@
 
     function productCardHTML(p) {
       const label = p.category === 'candles' ? 'Candle' : 'Jewellery';
+      const imgSrc = escapeHtml(p.image || '');
+      const imgAlt = escapeHtml(p.name);
       return `
         <article class="product-card ${p.cardClass || ''}" data-product="${p.id}">
-          <div class="product-image ${p.imageClass}"></div>
+          <div class="product-image">
+            <img src="${imgSrc}" alt="${imgAlt}" loading="lazy" />
+          </div>
           <div class="product-copy">
             <span class="product-label">${label}</span>
             <h3>${p.name}</h3>
@@ -736,6 +867,7 @@
       options = options || {};
       currentPage = page;
       if (productId) currentProductId = productId;
+      else if (page !== 'product') currentProductId = null;
 
       document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
       const target = document.getElementById('page-' + (page === 'product' ? 'product' : page));
@@ -812,7 +944,7 @@
 
       document.getElementById('productDetail').innerHTML = `
         <div class="detail-image-wrap">
-          <img id="detailMainImage" src="${p.image}" alt="${p.name}" />
+          <img id="detailMainImage" src="${escapeHtml(p.image)}" alt="${escapeHtml(p.name)}" />
           ${thumbs}
         </div>
         <div class="detail-info">
