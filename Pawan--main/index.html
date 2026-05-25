@@ -300,6 +300,17 @@
         <img src="other image/saanjhlogo.png" alt="Saanjh" class="brand-logo" />
         <span>Saanjh</span>
       </a>
+      
+      <div class="header-search-container">
+        <div class="header-search-wrapper">
+          <input type="text" id="heroSearchInput" class="header-search-input" placeholder="Search product..." autocomplete="off" />
+          <div id="searchSuggestions" class="search-suggestions"></div>
+        </div>
+        <button type="button" class="header-search-btn" id="heroSearchBtn" aria-label="Search">
+          <svg viewBox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+        </button>
+      </div>
+
       <button class="nav-toggle" id="navToggle" aria-label="Menu">
         <span></span><span></span><span></span>
       </button>
@@ -442,6 +453,24 @@
             <a href="https://wa.me/918349206021">+91 83492 06021</a>
           </div>
         </div>
+        
+        <!-- Track Order Option moved below Contact section -->
+        <div class="footer-track-order-wrapper">
+          <div class="hero-track-order" style="margin-top: 0; background: #fff; border-color: rgba(212, 165, 116, 0.45); box-shadow: var(--shadow-soft);">
+            <h3 class="track-order-title">Track Your Order</h3>
+            <p class="track-order-subtext">Enter your Order ID to check real-time updates.</p>
+            <form id="trackOrderForm" class="track-order-form">
+              <input type="text" id="trackOrderId" class="track-order-input" placeholder="Enter Order ID (e.g., 1)" required autocomplete="off" />
+              <button type="submit" class="track-order-btn" id="trackOrderSubmitBtn">
+                <span id="trackBtnText">Track</span>
+              </button>
+            </form>
+            <div id="trackResults" class="track-results-wrapper">
+              <!-- Dynamically populated tracking results -->
+            </div>
+          </div>
+        </div>
+
         <div class="footer-bottom">
           <span>© 2026 The Saanjh Vibe</span>
           <span>Free shipping above ₹1,000</span>
@@ -1290,6 +1319,265 @@
     document.getElementById('checkoutModal').addEventListener('click', (e) => {
       if (e.target.id === 'checkoutModal') closeCheckoutModal();
     });
+
+    // --- TRACK ORDER JS IMPLEMENTATION ---
+    async function trackOrder(e) {
+      if (e) e.preventDefault();
+      const inputVal = document.getElementById('trackOrderId').value.trim();
+      const orderId = parseInt(inputVal, 10);
+      
+      if (!orderId || isNaN(orderId)) {
+        showToast('Please enter a valid numeric Order ID.');
+        return;
+      }
+      
+      const submitBtn = document.getElementById('trackOrderSubmitBtn');
+      const btnText = document.getElementById('trackBtnText');
+      const resultsWrapper = document.getElementById('trackResults');
+      
+      submitBtn.disabled = true;
+      btnText.textContent = 'Tracking...';
+      
+      try {
+        const response = await fetch('/api/orders/' + orderId);
+        if (!response.ok) {
+          if (response.status === 404) {
+            renderTrackError('Order not found. Please verify your Order ID.');
+            return;
+          }
+          throw new Error('Server returned status: ' + response.status);
+        }
+        
+        const order = await response.json();
+        renderTrackSuccess(order);
+      } catch (err) {
+        console.error(err);
+        renderTrackError('Could not connect to the server. Please try again.');
+      } finally {
+        submitBtn.disabled = false;
+        btnText.textContent = 'Track';
+      }
+    }
+
+    function renderTrackError(message) {
+      const resultsWrapper = document.getElementById('trackResults');
+      resultsWrapper.innerHTML = `
+        <div class="track-error-alert">
+          ⚠️ ${escapeHtml(message)}
+        </div>
+      `;
+      resultsWrapper.classList.add('active');
+    }
+
+    function renderTrackSuccess(order) {
+      const resultsWrapper = document.getElementById('trackResults');
+      
+      // Determine stepper progress
+      // statuses: 'pending', 'completed', 'cancelled'
+      let step1 = 'completed'; // Order Placed is always complete
+      let step2 = 'active';    // Preparing Order is active if pending
+      let step3 = '';          // Delivered is pending
+      let progressWidth = '50%';
+      let step3Label = 'Delivered';
+      
+      if (order.status === 'completed') {
+        step2 = 'completed';
+        step3 = 'active completed';
+        progressWidth = '100%';
+      } else if (order.status === 'cancelled') {
+        step2 = 'cancelled';
+        step3 = 'cancelled';
+        progressWidth = '100%';
+        step3Label = 'Cancelled';
+      }
+      
+      // Parse items
+      let items = [];
+      try {
+        items = JSON.parse(order.items) || [];
+      } catch (e) {
+        console.error('Error parsing order items:', e);
+      }
+      
+      const itemsHtml = items.map(item => `
+        <div class="track-item-mini">
+          <img src="${escapeHtml(item.image || '')}" alt="${escapeHtml(item.name)}" />
+          <div class="track-item-mini-info">
+            ${escapeHtml(item.name)}
+            <span class="track-item-mini-qty">× ${item.quantity}</span>
+          </div>
+          <span class="track-item-mini-price">${formatPrice(item.price * item.quantity)}</span>
+        </div>
+      `).join('');
+      
+      const formattedDate = new Date(order.created_at || Date.now()).toLocaleDateString('en-IN', {
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+      
+      resultsWrapper.innerHTML = `
+        <div class="track-stepper">
+          <div class="track-stepper-progress" style="width: ${progressWidth}"></div>
+          
+          <div class="step-item completed">
+            <div class="step-dot">✓</div>
+            <div class="step-label">Order Placed</div>
+          </div>
+          
+          <div class="step-item ${step2}">
+            <div class="step-dot">${order.status === 'completed' ? '✓' : order.status === 'cancelled' ? '✗' : '2'}</div>
+            <div class="step-label">Preparing</div>
+          </div>
+          
+          <div class="step-item ${step3}">
+            <div class="step-dot">${order.status === 'completed' ? '✓' : order.status === 'cancelled' ? '✗' : '3'}</div>
+            <div class="step-label">${step3Label}</div>
+          </div>
+        </div>
+        
+        <div class="track-details">
+          <div class="track-meta-row">
+            <span>Order ID: <strong>#${order.id}</strong></span>
+            <span>Status: <strong style="color: ${order.status === 'completed' ? 'var(--sage)' : order.status === 'cancelled' ? '#d9534f' : 'var(--gold-dark)'}">${order.status.toUpperCase()}</strong></span>
+          </div>
+          <div class="track-meta-row">
+            <span>Date: <strong>${formattedDate}</strong></span>
+            <span>Customer: <strong>${escapeHtml(order.customer_name)}</strong></span>
+          </div>
+          
+          <div class="track-items-title">Items Ordered</div>
+          <div class="track-items-list">
+            ${itemsHtml}
+          </div>
+          
+          <div class="track-total-row">
+            <span>Total Amount Paid:</span>
+            <span>${formatPrice(order.total_amount)}</span>
+          </div>
+          
+          <div class="track-address">
+            <strong>Delivery Address:</strong>
+            ${escapeHtml(order.customer_address)}
+          </div>
+        </div>
+      `;
+      
+      resultsWrapper.classList.add('active');
+    }
+
+    document.getElementById('trackOrderForm').addEventListener('submit', trackOrder);
+
+    // --- PRODUCT SEARCH JS IMPLEMENTATION ---
+    function initProductSearch() {
+      const searchInput = document.getElementById('heroSearchInput');
+      const searchSuggestions = document.getElementById('searchSuggestions');
+      const searchBtn = document.getElementById('heroSearchBtn');
+
+      if (!searchInput || !searchSuggestions || !searchBtn) return;
+
+      function hideSuggestions() {
+        searchSuggestions.classList.remove('active');
+      }
+
+      function showSuggestions() {
+        searchSuggestions.classList.add('active');
+      }
+
+      searchInput.addEventListener('input', () => {
+        const query = searchInput.value.trim().toLowerCase();
+        if (!query) {
+          hideSuggestions();
+          return;
+        }
+
+        const matches = Object.values(PRODUCTS).filter(p => {
+          return p.name.toLowerCase().includes(query) || 
+                 p.category.toLowerCase().includes(query) || 
+                 p.desc.toLowerCase().includes(query);
+        }).slice(0, 5); // top 5 matches
+
+        if (matches.length === 0) {
+          searchSuggestions.innerHTML = `<div class="suggestion-no-results">No products found for "${escapeHtml(query)}"</div>`;
+          showSuggestions();
+          return;
+        }
+
+        searchSuggestions.innerHTML = matches.map(p => {
+          const categoryLabel = p.category === 'candles' ? 'Candles' : 'Jewellery';
+          return `
+            <div class="suggestion-item" data-id="${escapeHtml(p.id)}">
+              <img src="${escapeHtml(p.image || '')}" alt="${escapeHtml(p.name)}" />
+              <div class="suggestion-info">
+                <span class="suggestion-name">${escapeHtml(p.name)}</span>
+                <span class="suggestion-cat">${escapeHtml(categoryLabel)}</span>
+              </div>
+              <span class="suggestion-price">${formatPrice(p.price)}</span>
+            </div>
+          `;
+        }).join('');
+
+        // Bind click events to suggestion items
+        searchSuggestions.querySelectorAll('.suggestion-item').forEach(item => {
+          item.addEventListener('click', () => {
+            const id = item.dataset.id;
+            searchInput.value = '';
+            hideSuggestions();
+            navigateTo('product', id);
+          });
+        });
+
+        showSuggestions();
+      });
+
+      // Clear search when pressing Escape key
+      searchInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          searchInput.value = '';
+          hideSuggestions();
+        } else if (e.key === 'Enter') {
+          e.preventDefault();
+          executeTopSearch();
+        }
+      });
+
+      // Execute search on button click
+      searchBtn.addEventListener('click', executeTopSearch);
+
+      function executeTopSearch() {
+        const query = searchInput.value.trim().toLowerCase();
+        if (!query) return;
+
+        const matches = Object.values(PRODUCTS).filter(p => {
+          return p.name.toLowerCase().includes(query) || 
+                 p.category.toLowerCase().includes(query) || 
+                 p.desc.toLowerCase().includes(query);
+        });
+
+        if (matches.length > 0) {
+          // Open the top matching product details page
+          searchInput.value = '';
+          hideSuggestions();
+          navigateTo('product', matches[0].id);
+        } else {
+          showToast(`No matches found for "${query}"`);
+        }
+      }
+
+      // Close suggestions when clicking outside
+      document.addEventListener('click', (e) => {
+        if (!e.target.closest('.header-search-container')) {
+          hideSuggestions();
+        }
+      });
+    }
+
+    // Call initProductSearch
+    initProductSearch();
+
+
 
     window.addEventListener('popstate', parseHash);
     updateCartUI();

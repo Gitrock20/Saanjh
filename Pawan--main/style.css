@@ -1476,3 +1476,587 @@ button {
     width: 100%;
   }
 }
+
+/* ==========================================
+   TRACK ORDER WIDGET STYLES (GLASSMORPHIC)
+   ========================================== */
+.hero-track-order {
+  margin-top: 2.25rem;
+  background: rgba(255, 255, 255, 0.42);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(212, 165, 116, 0.3);
+  border-radius: 20px;
+  padding: 1.75rem;
+  max-width: 520px;
+  margin-left: auto;
+  margin-right: auto;
+  box-shadow: var(--shadow-soft), 0 8px 32px rgba(92, 77, 66, 0.04);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  text-align: center;
+  animation: slideInUp 0.8s ease-out 0.3s both;
+}
+
+.hero-track-order:hover {
+  border-color: rgba(212, 165, 116, 0.5);
+  box-shadow: var(--shadow-med), 0 12px 40px rgba(212, 165, 116, 0.1);
+  transform: translateY(-2px);
+}
+
+.track-order-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.35rem;
+  color: var(--text-dark);
+  margin: 0 0 0.4rem 0;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.track-order-subtext {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin: 0 0 1.25rem 0;
+  font-weight: 400;
+}
+
+.track-order-form {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 0;
+}
+
+.track-order-input {
+  flex: 1;
+  padding: 0.75rem 1.25rem;
+  border: 1px solid rgba(212, 165, 116, 0.35);
+  border-radius: 50px;
+  font-size: 0.9rem;
+  background: rgba(255, 255, 255, 0.75);
+  color: var(--text-dark);
+  transition: all 0.3s ease;
+  font-family: inherit;
+}
+
+.track-order-input:focus {
+  outline: none;
+  border-color: var(--gold);
+  background: white;
+  box-shadow: 0 0 0 3px rgba(212, 165, 116, 0.18);
+}
+
+.track-order-input::placeholder {
+  color: #c0b4a9;
+}
+
+.track-order-btn {
+  padding: 0.75rem 1.75rem;
+  border-radius: 50px;
+  background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
+  color: #fff;
+  border: none;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.track-order-btn:hover {
+  background: linear-gradient(135deg, var(--gold-dark) 0%, var(--gold) 100%);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-glow);
+}
+
+.track-order-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+.track-results-wrapper {
+  margin-top: 1.5rem;
+  border-top: 1px solid rgba(212, 165, 116, 0.2);
+  padding-top: 1.5rem;
+  text-align: left;
+  display: none;
+}
+
+.track-results-wrapper.active {
+  display: block;
+  animation: fadeInDown 0.4s ease-out forwards;
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Stepper progress styles */
+.track-stepper {
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  margin-bottom: 1.75rem;
+  padding: 0 0.25rem;
+}
+
+.track-stepper::before {
+  content: '';
+  position: absolute;
+  top: 14px;
+  left: 10%;
+  right: 10%;
+  height: 3px;
+  background: rgba(212, 165, 116, 0.2);
+  z-index: 1;
+}
+
+.track-stepper-progress {
+  position: absolute;
+  top: 14px;
+  left: 10%;
+  width: 0%;
+  height: 3px;
+  background: var(--gold);
+  z-index: 1;
+  transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.step-item {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+}
+
+.step-dot {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: #fff;
+  border: 2.5px solid rgba(212, 165, 116, 0.35);
+  display: grid;
+  place-items: center;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: var(--shadow-soft);
+}
+
+.step-label {
+  margin-top: 0.4rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+/* Stepper state modifiers */
+.step-item.active .step-dot {
+  border-color: var(--gold);
+  background: var(--gold);
+  color: #fff;
+  box-shadow: var(--shadow-glow);
+  transform: scale(1.1);
+}
+
+.step-item.active .step-label {
+  color: var(--gold-dark);
+  font-weight: 700;
+}
+
+.step-item.completed .step-dot {
+  border-color: var(--sage);
+  background: var(--sage);
+  color: #fff;
+}
+
+.step-item.completed .step-label {
+  color: var(--text-dark);
+}
+
+.step-item.cancelled .step-dot {
+  border-color: #d9534f;
+  background: #d9534f;
+  color: #fff;
+}
+
+.step-item.cancelled .step-label {
+  color: #d9534f;
+  font-weight: 700;
+}
+
+/* Tracking order details */
+.track-details {
+  background: rgba(255, 255, 255, 0.55);
+  border-radius: 14px;
+  padding: 1.25rem;
+  border: 1px solid rgba(212, 165, 116, 0.2);
+  box-shadow: inset 0 2px 4px rgba(92, 77, 66, 0.02);
+}
+
+.track-meta-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8rem;
+  margin-bottom: 0.6rem;
+  color: var(--text-muted);
+  border-bottom: 1px solid rgba(212, 165, 116, 0.15);
+  padding-bottom: 0.5rem;
+}
+
+.track-meta-row strong {
+  color: var(--text-dark);
+}
+
+.track-items-title {
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-dark);
+  margin: 0.8rem 0 0.4rem 0;
+}
+
+.track-items-list {
+  max-height: 150px;
+  overflow-y: auto;
+  padding-right: 0.25rem;
+  margin-bottom: 0.75rem;
+}
+
+/* Custom minimal scrollbar */
+.track-items-list::-webkit-scrollbar {
+  width: 4px;
+}
+.track-items-list::-webkit-scrollbar-track {
+  background: rgba(212, 165, 116, 0.05);
+}
+.track-items-list::-webkit-scrollbar-thumb {
+  background: rgba(212, 165, 116, 0.3);
+  border-radius: 2px;
+}
+
+.track-item-mini {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.45rem 0;
+  border-bottom: 1px dashed rgba(212, 165, 116, 0.12);
+}
+
+.track-item-mini:last-child {
+  border-bottom: none;
+}
+
+.track-item-mini img {
+  width: 32px;
+  height: 32px;
+  object-fit: cover;
+  border-radius: 6px;
+  background: var(--cream);
+  border: 1px solid rgba(212, 165, 116, 0.1);
+}
+
+.track-item-mini-info {
+  flex: 1;
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--text-dark);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.track-item-mini-qty {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-left: 0.4rem;
+}
+
+.track-item-mini-price {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--gold-dark);
+}
+
+.track-total-row {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 0.5rem;
+  font-weight: 700;
+  font-size: 0.9rem;
+  border-top: 1px solid rgba(212, 165, 116, 0.2);
+  padding-top: 0.6rem;
+  color: var(--text-dark);
+}
+
+.track-total-row span:last-child {
+  color: var(--gold-dark);
+}
+
+.track-address {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin-top: 0.75rem;
+  line-height: 1.45;
+  background: rgba(245, 230, 211, 0.25);
+  padding: 0.6rem 0.8rem;
+  border-radius: 8px;
+  border-left: 3px solid var(--gold);
+}
+
+.track-address strong {
+  display: block;
+  margin-bottom: 0.2rem;
+  color: var(--text-dark);
+  font-size: 0.8rem;
+}
+
+.track-error-alert {
+  padding: 0.85rem 1.25rem;
+  border-radius: 12px;
+  background: rgba(217, 83, 79, 0.08);
+  border: 1px solid rgba(217, 83, 79, 0.2);
+  color: #d9534f;
+  font-size: 0.82rem;
+  font-weight: 500;
+  margin-top: 1rem;
+  text-align: center;
+  animation: fadeInDown 0.3s ease-out;
+}
+
+/* ==========================================
+   PRODUCT SEARCH BAR STYLES (HEADER COMPACT)
+   ========================================== */
+.header-search-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  max-width: 320px;
+  width: 100%;
+  position: relative;
+  z-index: 15;
+  margin: 0 1.25rem;
+}
+
+.header-search-wrapper {
+  flex: 1;
+  position: relative;
+}
+
+.header-search-input {
+  width: 100%;
+  padding: 0.5rem 1.15rem;
+  border-radius: 50px;
+  border: 1px solid rgba(212, 165, 116, 0.22);
+  background: rgba(245, 243, 240, 0.85);
+  color: var(--text-dark);
+  font-size: 0.85rem;
+  font-family: inherit;
+  transition: all 0.3s ease;
+  height: 38px;
+}
+
+.header-search-input:focus {
+  outline: none;
+  background: #fff;
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px rgba(212, 165, 116, 0.12);
+}
+
+.header-search-input::placeholder {
+  color: #b0a498;
+}
+
+.header-search-btn {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: var(--gold);
+  border: none;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: var(--shadow-glow);
+  flex-shrink: 0;
+  padding: 0;
+}
+
+.header-search-btn:hover {
+  background: var(--gold-dark);
+  transform: scale(1.05);
+}
+
+.header-search-btn svg {
+  width: 14px;
+  height: 14px;
+  stroke: #fff;
+  stroke-width: 2.8;
+  fill: none;
+}
+
+/* Footer track order spacing */
+.footer-track-order-wrapper {
+  width: 100%;
+  max-width: 520px;
+  margin: 2.5rem auto 1rem auto;
+  padding: 0 1.5rem;
+  box-sizing: border-box;
+}
+
+/* Responsiveness for header search bar */
+@media (max-width: 900px) {
+  .header-search-container {
+    max-width: 240px;
+    margin: 0 0.75rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .header-search-container {
+    max-width: 200px;
+    margin: 0 0.5rem;
+  }
+  .brand-link span {
+    display: none; /* Hide brand text on mobile to make room for search */
+  }
+  .header-inner {
+    gap: 0.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .header-search-container {
+    max-width: 130px;
+  }
+  .header-search-input {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.75rem;
+    height: 34px;
+  }
+  .header-search-btn {
+    width: 34px;
+    height: 34px;
+  }
+}
+
+
+/* Suggestion dropdown styling */
+.search-suggestions {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 16px;
+  border: 1px solid rgba(212, 165, 116, 0.25);
+  box-shadow: var(--shadow-med);
+  max-height: 280px;
+  overflow-y: auto;
+  z-index: 100;
+  display: none;
+  padding: 0.5rem;
+  text-align: left;
+}
+
+/* Custom scrollbar for suggestions */
+.search-suggestions::-webkit-scrollbar {
+  width: 4px;
+}
+.search-suggestions::-webkit-scrollbar-track {
+  background: rgba(212, 165, 116, 0.05);
+}
+.search-suggestions::-webkit-scrollbar-thumb {
+  background: rgba(212, 165, 116, 0.3);
+  border-radius: 2px;
+}
+
+.search-suggestions.active {
+  display: block;
+  animation: fadeInDown 0.25s ease-out forwards;
+}
+
+.suggestion-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.6rem 0.85rem;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.suggestion-item:hover {
+  background: rgba(245, 230, 211, 0.45);
+  transform: translateX(2px);
+}
+
+.suggestion-item img {
+  width: 36px;
+  height: 36px;
+  object-fit: cover;
+  border-radius: 6px;
+  background: var(--cream);
+  border: 1px solid rgba(212, 165, 116, 0.1);
+  flex-shrink: 0;
+}
+
+.suggestion-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.suggestion-name {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-dark);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.suggestion-cat {
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-top: 0.05rem;
+}
+
+.suggestion-price {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--gold-dark);
+  flex-shrink: 0;
+}
+
+.suggestion-no-results {
+  padding: 1rem;
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+
