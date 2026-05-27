@@ -245,7 +245,7 @@
     .bestseller-grid .product-copy { padding: 1.25rem; }
     .bestseller-grid .product-copy p {
       display: -webkit-box;
-      -webkit-line-clamp: 2;
+      
       -webkit-box-orient: vertical;
       overflow: hidden;
     }
@@ -600,7 +600,7 @@
 
   <script>
     // Paste your Play Store / App Store link here when ready
-    const APP_DOWNLOAD_URL = '';
+    const APP_DOWNLOAD_URL = 'app-debug.apk';
     // Paste your Instagram profile URL when ready (e.g. https://www.instagram.com/yourhandle/)
     const INSTAGRAM_URL = '';
 
@@ -1251,6 +1251,7 @@
         });
         if (APP_DOWNLOAD_URL) {
           btn.href = APP_DOWNLOAD_URL;
+          btn.setAttribute('download', 'app-debug.apk');
           btn.target = '_blank';
           btn.rel = 'noopener noreferrer';
         }

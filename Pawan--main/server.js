@@ -3,6 +3,7 @@ const sqlite3 = require('sqlite3').verbose();
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const path = require('path');
+const fs = require('fs');
 
 const app = express();
 const PORT = 3000;
@@ -122,6 +123,27 @@ app.delete('/api/orders/:id', (req, res) => {
     }
     res.json({ success: true, message: 'Order deleted successfully' });
   });
+});
+
+// Serve the local APK file for download
+app.get('/app-debug.apk', (req, res) => {
+  const relativeApkPath = path.join(__dirname, '..', '..', 'app-debug.apk');
+  const absoluteApkPath = 'C:\\Users\\Mayan\\Downloads\\app-debug.apk';
+  
+  console.log(`[DOWNLOAD] Request received for APK.`);
+  console.log(`[DOWNLOAD] Checking relative path: ${relativeApkPath}`);
+  console.log(`[DOWNLOAD] Checking absolute path: ${absoluteApkPath}`);
+  
+  if (fs.existsSync(relativeApkPath)) {
+    console.log(`[DOWNLOAD] Found APK via relative path! Streaming...`);
+    res.download(relativeApkPath, 'app-debug.apk');
+  } else if (fs.existsSync(absoluteApkPath)) {
+    console.log(`[DOWNLOAD] Found APK via absolute path! Streaming...`);
+    res.download(absoluteApkPath, 'app-debug.apk');
+  } else {
+    console.error(`[DOWNLOAD] [ERROR] APK file not found at either path.`);
+    res.status(404).send('APK file not found in your Downloads folder. Please place app-debug.apk inside C:\\Users\\Mayan\\Downloads\\');
+  }
 });
 
 // Health check
